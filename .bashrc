@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.33
+version=0.1.34
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -235,24 +235,25 @@ fi
 # Bash Display Settings
 	# Prompt
 		PS(){
-			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
+			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
+			# PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
 			# if [[ -n "$remote" ]];then
 			# else
 			# 	PS1='\e[7m$app\e[0m \e[7m$\e[0m '
 			# fi
+			# PS1='\e[7m…/${PWD##*/}$(__git_ps1) $>\e[0m '
+			# PS1='\[\033[33m\]…/${PWD##*/}$(__git_ps1) $> \[\033[0m\]'
+				# …/directory (master) $>
+			# PS1='\w$(__git_ps1) $ '
+			# PS1='\[\033[33m\]\w$(__git_ps1)\[\033[0m\] $'
+			# PS1='\[\033[0m\]\[\033[32m\]\u@\h \[\033[33m\]\w$(__git_ps1)\[\033[0m\]\n$'
 		}
 		PS
-		# PS1='\e[7m…/${PWD##*/}$(__git_ps1) $>\e[0m '
-		# PS1='\[\033[33m\]…/${PWD##*/}$(__git_ps1) $> \[\033[0m\]'
-			# …/directory (master) $>
-		# PS1='\w$(__git_ps1) $ '
-		# PS1='\[\033[33m\]\w$(__git_ps1)\[\033[0m\] $'
-		# PS1='\[\033[0m\]\[\033[32m\]\u@\h \[\033[33m\]\w$(__git_ps1)\[\033[0m\]\n$'
 	# Title
 		if [[ -n "$OPENSHIFT" ]];then
 			PROMPT_COMMAND='echo -ne "\033]0;$app ($remote) ${PWD}\007"'
 		else
-			PROMPT_COMMAND='echo -ne "\033]0;$app$(__git_ps1) ${PWD}\007"'
+			PROMPT_COMMAND='echo -ne "\033]0;$app$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) ${PWD}\007"'
 		fi
 # ===================================================================================================================== #
 fi
