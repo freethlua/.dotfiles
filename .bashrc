@@ -4,10 +4,10 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.31
+version=0.1.32
 
 if [[ -z "$bashrc0" ]];then
-echo -e "\e[7m .dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
+echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 export bashrc0='true'
 # clear
 # Environment Variables
