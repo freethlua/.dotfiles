@@ -4,10 +4,10 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.30
+version=0.1.31
 
 if [[ -z "$bashrc0" ]];then
-echo -e "\e[7m dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
+echo -e "\e[7m .dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
 export bashrc0='true'
 # clear
 # Environment Variables
@@ -235,11 +235,11 @@ fi
 # Bash Display Settings
 	# Prompt
 		PS(){
-			if [[ -n "$remote" ]];then
-				PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
-			else
-				PS1='\e[7m$app\e[0m \e[7m$\e[0m '
-			fi
+			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
+			# if [[ -n "$remote" ]];then
+			# else
+			# 	PS1='\e[7m$app\e[0m \e[7m$\e[0m '
+			# fi
 		}
 		PS
 		# PS1='\e[7m…/${PWD##*/}$(__git_ps1) $>\e[0m '
