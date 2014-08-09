@@ -1,5 +1,12 @@
+
+# .dotfiles | .bashrc
+
+# execute like so:
+# curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
+
+version=0.1.24
+
 if [[ -z "$bashrc0" ]];then
-version=0.1.23
 echo -e "\e[7m dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
 export bashrc0='true'
 # clear
@@ -103,6 +110,7 @@ export bashrc0='true'
 	}
 	# alias mongoshell='mongo $app'
 	pull(){
+		local remote='unset'
 		if [[ $remote == "gh" ]];then
 			remote=github
 		fi
@@ -113,12 +121,15 @@ export bashrc0='true'
 			remote=openshift
 		fi
 		if [[ -n "$2" ]];then
-			git pull -t $remote $2
+			echo git pull -t $remote $2
 		else
-			git pull -t $remote master
+			echo git pull -t $remote master
 		fi
 	}
 	push(){
+		local remote='unset'
+		local m=''
+		local f=''
 		if [[ "$1" == "f" ]];then
 			local f='-f'
 			remote=$2
@@ -128,15 +139,15 @@ export bashrc0='true'
 		fi
 		local m=''
 		if [[ $remote == "gh" ]];then
-			local m='--mirror'
+			m='--mirror'
 			remote=github
 		fi
 		if [[ $remote == "bb" ]];then
-			local m='--mirror'
+			m='--mirror'
 			remote=bitbucket
 		fi
 		if [[ $remote == "os" ]];then
-			local m='--mirror'
+			m='--mirror'
 			remote=openshift
 		fi
 		git push $f $m $remote
