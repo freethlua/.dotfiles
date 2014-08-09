@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.34
+version=0.1.35
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -57,7 +57,7 @@ export bashrc0='true'
 	# Save alias on runtime
 		save(){
 			eval "${@:2}"
-			if [[ $? = 0 ]]; then
+			if [[ $? -eq 0 ]]; then
 				str="alias $1='${@:2}'"
 				eval $str
 				echo -e "\n$str" >> ~/.bashrc
@@ -234,8 +234,21 @@ fi
 
 # Bash Display Settings
 	# Prompt
+		__git_ps1 > /dev/null 2>&1
+		if [[ $? -ne 0 ]]; then
+			gitps1(){
+				echo ''				
+			}
+		else
+			gitps1(){
+				if [[ "$(__git_ps1)" != " (master)" ]];then 
+					echo "$(__git_ps1)"
+				fi
+			}			
+		fi
 		PS(){
-			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
+			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(gitps1) \e[7m$\e[0m '
+			# PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
 			# PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
 			# if [[ -n "$remote" ]];then
 			# else
@@ -250,10 +263,11 @@ fi
 		}
 		PS
 	# Title
-		if [[ -n "$OPENSHIFT" ]];then
-			PROMPT_COMMAND='echo -ne "\033]0;$app ($remote) ${PWD}\007"'
-		else
-			PROMPT_COMMAND='echo -ne "\033]0;$app$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) ${PWD}\007"'
-		fi
+		PROMPT_COMMAND='echo -ne "\033]0;$app$(gitps1) ${PWD}\007"'
+		# if [[ -n "$OPENSHIFT" ]];then
+		# 	PROMPT_COMMAND='echo -ne "\033]0;$app ($remote) ${PWD}\007"'
+		# else
+		# 	PROMPT_COMMAND='echo -ne "\033]0;$app$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) ${PWD}\007"'
+		# fi
 # ===================================================================================================================== #
 fi
