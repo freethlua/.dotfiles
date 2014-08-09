@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.32
+version=0.1.33
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -198,7 +198,7 @@ export bashrc0='true'
 	# alias osmongodump='rhc ssh itsmaidup --command "mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD"'
 
 
-echo "┌  Handy shortcuts  ┐"
+# echo "┌  Handy shortcuts  ┐"
 echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
 echo "gl …………………………………………… git log --graph ..."
 echo "cm msg ………………………………… git add -A && commit -m \"msg\""
