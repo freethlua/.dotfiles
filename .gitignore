@@ -2,3 +2,4 @@
 *.log
 *.CMD
 *.sublime*
+!.sublime-project

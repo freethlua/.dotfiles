@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	], 
+	"build_systems": [
+		{
+			"name": ".dotfiles",
+			"shell": true,
+			"working_dir": "${project_path:${folder}}",
+			// "cmd": ["dir"]
+			// "cmd": ["git push --set-upstream .dotfiles master "]
+			"cmd": ["git add -A && git commit -m . && git push -f .dotfiles "]
+		}
+	]
+}
