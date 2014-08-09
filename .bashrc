@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.25
+version=0.1.26
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
@@ -110,7 +110,7 @@ export bashrc0='true'
 	}
 	# alias mongoshell='mongo $app'
 	pull(){
-		local remote='unset'
+		local remote=$1
 		if [[ $remote == "gh" ]];then
 			remote=github
 		fi
