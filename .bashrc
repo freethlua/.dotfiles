@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.35
+version=0.1.36
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -25,6 +25,7 @@ export bashrc0='true'
 		export OPENSHIFT='true'
 		export OPENSHIFT_HOME_DIR='app-root/data/'
 		export HOME=$HOME$OPENSHIFT_HOME_DIR
+		export LOGS=$OPENSHIFT_LOG_DIR
 	fi
 	export winston='winston.log'
 	export CLOG='log verbose'
