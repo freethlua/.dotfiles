@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.29
+version=0.1.30
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
@@ -236,7 +236,7 @@ fi
 	# Prompt
 		PS(){
 			if [[ -n "$remote" ]];then
-				PS1='\e[7m$remote\e[0m \e[7m$app\e[0m…${PWD##*/}/\e[7m$\e[0m '
+				PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
 			else
 				PS1='\e[7m$app\e[0m \e[7m$\e[0m '
 			fi
