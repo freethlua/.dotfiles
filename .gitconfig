@@ -2,4 +2,4 @@
 	name = x
 	email = x
 [push]
-	default = simple
+	default = matching
