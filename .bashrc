@@ -236,7 +236,7 @@ fi
 	# Prompt
 		PS(){
 			if [[ -n "$remote" ]];then
-				PS1='\e[7m$remote\e[0m \e[7m$app\e[0m \e[7m$\e[0m '
+				PS1='\e[7m$remote\e[0m \e[7m$app\e[0m…${PWD##*/}/\e[7m$\e[0m '
 			else
 				PS1='\e[7m$app\e[0m \e[7m$\e[0m '
 			fi
