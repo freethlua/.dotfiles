@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.24
+version=0.1.25
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
