@@ -141,20 +141,8 @@ export bashrc0='true'
 		fi
 		git push $f $m $remote
 	}
-	pullgh(){
-		git pull -t github master
-	}
-	pushgh(){
-		git push -f --mirror github
-	}
-	pullbb(){
-		git pull -t bitbucket master
-	}
-	pushbb(){
-		git push -f --mirror bitbucket
-	}
-	pushos(){
-		git push -f --mirror openshift
+	osp(){
+		export osp=$@
 	}
 	rhc(){
 		if [[ "${@: -1}" == "app" ]];then
