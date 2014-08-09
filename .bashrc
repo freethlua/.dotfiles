@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.37
+version=0.1.38
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -174,10 +174,12 @@ export bashrc0='true'
 		if [[ "${1:0:1}" == "f" ]];then
 			if [[ "${1:1:2}" == "r" ]] || [[ "${2:0:1}" == "r" ]];then
 				sshos "--command 'tac app-root/logs/nodejs.log'"
+				echo Openshift full nodejs.log (oldest bottom)
 			else
 				sshos "--command 'cat app-root/logs/nodejs.log'"
 			fi
 		else
+			echo Openshift live tail nodejs.log ...
 			rhc tail -f app-root/logs/nodejs.log app
 		fi
 	}
