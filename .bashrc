@@ -4,7 +4,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 
-version=0.1.26
+version=0.1.27
 
 if [[ -z "$bashrc0" ]];then
 echo -e "\e[7m dotfiles.bashrc \e[0m \e[7m v$version \e[0m"
@@ -121,9 +121,9 @@ export bashrc0='true'
 			remote=openshift
 		fi
 		if [[ -n "$2" ]];then
-			echo git pull -t $remote $2
+			git pull -t $remote $2
 		else
-			echo git pull -t $remote master
+			git pull -t $remote master
 		fi
 	}
 	push(){
