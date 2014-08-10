@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.2.2
+version=0.2.3
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
@@ -240,21 +240,21 @@ version=0.2.2
 	osmongodump(){
 		sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
 	}
-# echo "┌  Handy shortcuts  ┐"
-	echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
-	echo "gl …………………………………………… git log --graph ..."
-	echo "cm msg ………………………………… git add -A && commit -m \"msg\""
-	echo "run [update] [pkg] … [npm install [pkg] &&] npm start"
-	echo "pull [gh/bb/os] ………… git pull -t [github/bitbucket/openshift] master"
-	echo "push [f] [gh/bb/os]  git push [-f] --mirror [github/bitbucket/openshift]"
-	echo "npm [...] ………………………… npm [[if .npmrc] --userconfig=.npmrc] [...]"
-	echo "publish [msg] ……………… npm version patch && publish [msg]"
-	echo "rhc [...] [app] ………… rhc [...] -a \$app"
-	echo "oslogs ………………………………… rhc tail -f app-root/logs/nodejs.log \$app"
-	echo "sshos [...] …………………… rhc ssh [...] \$app"
-	echo "mongo [...] …………………… mongo [...] \$app"
-	echo "mongodb ……………………………… mongod"
-	echo "[os]mongoeval \"...\"  [sshos --command] mongo --eval \"...\""
+# # echo "┌  Handy shortcuts  ┐"
+# 	echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
+# 	echo "gl …………………………………………… git log --graph ..."
+# 	echo "cm msg ………………………………… git add -A && commit -m \"msg\""
+# 	echo "run [update] [pkg] … [npm install [pkg] &&] npm start"
+# 	echo "pull [gh/bb/os] ………… git pull -t [github/bitbucket/openshift] master"
+# 	echo "push [f] [gh/bb/os]  git push [-f] --mirror [github/bitbucket/openshift]"
+# 	echo "npm [...] ………………………… npm [[if .npmrc] --userconfig=.npmrc] [...]"
+# 	echo "publish [msg] ……………… npm version patch && publish [msg]"
+# 	echo "rhc [...] [app] ………… rhc [...] -a \$app"
+# 	echo "oslogs ………………………………… rhc tail -f app-root/logs/nodejs.log \$app"
+# 	echo "sshos [...] …………………… rhc ssh [...] \$app"
+# 	echo "mongo [...] …………………… mongo [...] \$app"
+# 	echo "mongodb ……………………………… mongod"
+# 	echo "[os]mongoeval \"...\"  [sshos --command] mongo --eval \"...\""
 ## Run local .bashrc(s)
 	if [[ -n $local ]];then
 		if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
