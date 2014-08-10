@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.2.0a
+version=0.2.1
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
@@ -49,7 +49,7 @@ version=0.2.0a
 					if [[ -x more ]];then
 						command du -s * | sort -nr | more
 					else
-						command du -s * | sort -nr
+						command du -s * | sort -n
 					fi
 				fi
 			fi
@@ -60,7 +60,7 @@ version=0.2.0a
 			git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
 		}
 	# commit auto
-		cm ["."]
+		# cm ["."]
 		cm(){
 			git add -A
 			if [[ -z "$@" ]];then
