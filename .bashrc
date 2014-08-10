@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.2.1
+version=0.2.2
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
@@ -168,6 +168,11 @@ version=0.2.1
 	# run without colors by default 
 		yo(){
 			command yo --no-color $@
+		}
+## mocha
+	# run mocha without colors by default
+		mocha(){
+			command mocha --no-colors $@
 		}
 ## opsnshift related
 	# ! Store your username password and maybe token in your local .bashrc
