@@ -1,16 +1,13 @@
-
 # .dotfiles | .bashrc
-
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-
-version=0.1.39
-
-if [[ -z "$bashrc0" ]];then
-echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
-export bashrc0='true'
+version=0.2.0a
+# Run only if never run before
+	if [[ -z "$bashrc0" ]];then
+	export bashrc0='true'
+	echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 # clear
-# Environment Variables
+# Setting some Environment Variables
 	if [[ -z "$PORT" ]];then
 		export local='true'
 		export PORT='80'
@@ -31,31 +28,95 @@ export bashrc0='true'
 	export CLOG='log verbose'
 	export CLOG='log verbose info'
 	export CLOG=''
-# aliases
-	d(){
-		echo ${PWD}
-	}
-	dir(){
-		echo ${PWD}; ls -1AhsS --color=always
-	}
-	du(){
-		d
-		if [[ -n "$@" ]];then
-			command du $@
-		else
-			sort -h /dev/null 2> /dev/null
-			if [[ $? -eq 0 ]];then
-				command du -hs * | sort -hr | more
+## Basic commands
+	# directory
+		d(){
+			echo ${PWD}
+		}
+		dir(){
+			echo ${PWD}; ls -1AhsS --color=always
+		}
+	# disk usage; default 
+		du(){
+			d
+			if [[ -n "$@" ]];then
+				command du $@
 			else
-				if [[ -x more ]];then
-					command du -s * | sort -nr | more
+				sort -h /dev/null 2> /dev/null
+				if [[ $? -eq 0 ]];then
+					command du -hs * | sort -hr | more
 				else
-					command du -s * | sort -nr
+					if [[ -x more ]];then
+						command du -s * | sort -nr | more
+					else
+						command du -s * | sort -nr
+					fi
 				fi
 			fi
-		fi
-	}
-	# Save alias on runtime
+		}
+## Git related
+	# Pretty Git graph
+		gl(){
+			git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
+		}
+	# commit auto
+		cm ["."]
+		cm(){
+			git add -A
+			if [[ -z "$@" ]];then
+				git commit -m "."
+			else
+				git commit -m "$@"
+			fi
+		}
+	# pull [gh/bb/os]
+		pull(){
+			local remote=$1
+			if [[ $remote == "gh" ]];then
+				remote=github
+			fi
+			if [[ $remote == "bb" ]];then
+				remote=bitbucket
+			fi
+			if [[ $remote == "os" ]];then
+				remote=openshift
+			fi
+			if [[ -n "$2" ]];then
+				git pull -t $remote $2
+			else
+				git pull -t $remote master
+			fi
+		}
+	# push [gh/bb/os]
+		push(){
+			local remote='unset'
+			local m=''
+			local f=''
+			if [[ "$1" == "f" ]];then
+				local f='-f'
+				remote=$2
+			else
+				local f=''
+				remote=$1
+			fi
+			local m=''
+			if [[ $remote == "gh" ]];then
+				m='--mirror'
+				remote=github
+			fi
+			if [[ $remote == "bb" ]];then
+				m='--mirror'
+				remote=bitbucket
+			fi
+			if [[ $remote == "os" ]];then
+				m='--mirror'
+				remote=openshift
+			fi
+			git push $f $m $remote
+		}
+# Meta (bash related)
+	# save <alias> <command> [argument(s)]
+		# Run a command and save it as alias in your local .bashrc
 		save(){
 			eval "${@:2}"
 			if [[ $? -eq 0 ]]; then
@@ -64,15 +125,7 @@ export bashrc0='true'
 				echo -e "\n$str" >> ~/.bashrc
 				fi
 		}
-	# Git graph
-		gl(){
-			git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
-		}
-		cm(){
-			git add -A
-			git commit -m "$@"
-		}
-	# Meta
+	# edit yourlocal .bashrc
 		rc(){
 			if [[ "$1" == "v" ]];then
 				vim ~/.bashrc
@@ -85,102 +138,80 @@ export bashrc0='true'
 				fi
 			fi
 		}
-	# global
-	npm(){
-		if [[ -f .npmrc ]];then
-			command npm --userconfig=.npmrc $@
-		else
-			command npm $@
-		fi
-	}
-	# alias publish='npm --userconfig=.npmrc publish'
-	pub(){
-		if [[ -z "$@" ]]; then
-			npm version patch
-		else
-			npm version patch -m $1
-		fi
-		npm publish
-	}
-	alias run=run
-	run(){
-		if [[ "$1" == "update" ]];then
-			npm install ${@:2}
-		fi
-		command npm start
-	}
-	# alias mongoshell='mongo $app'
-	pull(){
-		local remote=$1
-		if [[ $remote == "gh" ]];then
-			remote=github
-		fi
-		if [[ $remote == "bb" ]];then
-			remote=bitbucket
-		fi
-		if [[ $remote == "os" ]];then
-			remote=openshift
-		fi
-		if [[ -n "$2" ]];then
-			git pull -t $remote $2
-		else
-			git pull -t $remote master
-		fi
-	}
-	push(){
-		local remote='unset'
-		local m=''
-		local f=''
-		if [[ "$1" == "f" ]];then
-			local f='-f'
-			remote=$2
-		else
-			local f=''
-			remote=$1
-		fi
-		local m=''
-		if [[ $remote == "gh" ]];then
-			m='--mirror'
-			remote=github
-		fi
-		if [[ $remote == "bb" ]];then
-			m='--mirror'
-			remote=bitbucket
-		fi
-		if [[ $remote == "os" ]];then
-			m='--mirror'
-			remote=openshift
-		fi
-		git push $f $m $remote
-	}
-	osp(){
-		export osp=$@
-	}
-	rhc(){
-		if [[ "${@: -1}" == "app" ]];then
-			if [[ -n "$osp" ]];then
-				eval "command rhc ${@:1:$(($#-1))} --server openshift.redhat.com -l $osu -p $osp --token $ost -a $app"
+## npm related
+	# .npmrc if exists, run with that (usefull for multiple accounts on same machine)
+		npm(){
+			if [[ -f .npmrc ]];then
+				command npm --userconfig=.npmrc $@
 			else
-				eval "command rhc ${@:1:$(($#-1))} -a $app"
+				command npm $@
 			fi
-		else
-			eval "command rhc $@"
-		fi
-	}
- 	sshos(){
-		rhc ssh $@ app
-	}
-	oslogs(){
-		if [[ "${1:0:1}" == "f" ]];then
-			if [[ "${1:1:2}" == "r" ]] || [[ "${2:0:1}" == "r" ]];then
-				sshos "--command 'tac app-root/logs/nodejs.log'"
+		}
+	# publish after incrementing version (patch)
+		pub(){
+			if [[ -z "$@" ]]; then
+				npm version patch
 			else
-				sshos "--command 'cat app-root/logs/nodejs.log'"
+				npm version patch -m $1
 			fi
-		else
-			rhc tail -f app-root/logs/nodejs.log app
-		fi
-	}
+			npm publish
+		}
+## node app related
+	# run through npm
+		run(){
+			if [[ "$1" == "update" ]];then
+				npm install ${@:2}
+			fi
+			command npm start
+		}
+## yoman related
+	# run without colors by default 
+		yo(){
+			command yo --no-color $@
+		}
+## opsnshift related
+	# ! Store your username password and maybe token in your local .bashrc
+		# export osu='username'
+		# export osp='password'
+		# export ost='token_-_-_-_-_-_-_-...'
+		# set password at runtime (if you don't wanna store it in your local .bashrc)
+			osp(){
+				export osp=$@
+			}	
+	# rhc <commands> ["app"]
+		# add "app" at the end to add "-a $app" at the end. (store your app's name in local .bashrc)
+		rhc(){
+			if [[ "${@: -1}" == "app" ]];then
+				if [[ -n "$osp" ]];then
+					eval "command rhc ${@:1:$(($#-1))} --server openshift.redhat.com -l $osu -p $osp --token $ost -a $app"
+				else
+					eval "command rhc ${@:1:$(($#-1))} -a $app"
+				fi
+			else
+				eval "command rhc $@"
+			fi
+		}
+	# ssh into opsnshift
+	 	sshos(){
+			rhc ssh $@ app
+		}
+	# oslogs [f][r]
+		# view oslogs of nodejs.log; 
+		# default tailed logs
+		# f=full logs from file
+		# r= in reverse order (latest bottom)
+		oslogs(){
+			if [[ "${1:0:1}" == "f" ]];then
+				if [[ "${1:1:2}" == "r" ]] || [[ "${2:0:1}" == "r" ]];then
+					sshos "--command 'tac app-root/logs/nodejs.log'"
+				else
+					sshos "--command 'cat app-root/logs/nodejs.log'"
+				fi
+			else
+				rhc tail -f app-root/logs/nodejs.log app
+			fi
+		}
+## mongoDB related
 	mongo(){
 		if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
 			command mongo --host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD $@ $app
@@ -204,57 +235,51 @@ export bashrc0='true'
 	osmongodump(){
 		sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
 	}
-	# alias osmongodump='rhc ssh itsmaidup --command "mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD"'
-
-
 # echo "┌  Handy shortcuts  ┐"
-echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
-echo "gl …………………………………………… git log --graph ..."
-echo "cm msg ………………………………… git add -A && commit -m \"msg\""
-echo "run [update] [pkg] … [npm install [pkg] &&] npm start"
-echo "pull [gh/bb/os] ………… git pull -t [github/bitbucket/openshift] master"
-echo "push [f] [gh/bb/os]  git push [-f] --mirror [github/bitbucket/openshift]"
-echo "npm [...] ………………………… npm [[if .npmrc] --userconfig=.npmrc] [...]"
-echo "publish [msg] ……………… npm version patch && publish [msg]"
-echo "rhc [...] [app] ………… rhc [...] -a \$app"
-echo "oslogs ………………………………… rhc tail -f app-root/logs/nodejs.log \$app"
-echo "sshos [...] …………………… rhc ssh [...] \$app"
-echo "mongo [...] …………………… mongo [...] \$app"
-echo "mongodb ……………………………… mongod"
-echo "[os]mongoeval \"...\"  [sshos --command] mongo --eval \"...\""
-
-
-
-if [[ -n $local ]];then
-	if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
-		if [[ -f .bashrc ]];then
-			. .bashrc
-			cd $app 2> /dev/null
-			# if [[ -n $local ]];then
-			# 	run
-			# fi
+	echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
+	echo "gl …………………………………………… git log --graph ..."
+	echo "cm msg ………………………………… git add -A && commit -m \"msg\""
+	echo "run [update] [pkg] … [npm install [pkg] &&] npm start"
+	echo "pull [gh/bb/os] ………… git pull -t [github/bitbucket/openshift] master"
+	echo "push [f] [gh/bb/os]  git push [-f] --mirror [github/bitbucket/openshift]"
+	echo "npm [...] ………………………… npm [[if .npmrc] --userconfig=.npmrc] [...]"
+	echo "publish [msg] ……………… npm version patch && publish [msg]"
+	echo "rhc [...] [app] ………… rhc [...] -a \$app"
+	echo "oslogs ………………………………… rhc tail -f app-root/logs/nodejs.log \$app"
+	echo "sshos [...] …………………… rhc ssh [...] \$app"
+	echo "mongo [...] …………………… mongo [...] \$app"
+	echo "mongodb ……………………………… mongod"
+	echo "[os]mongoeval \"...\"  [sshos --command] mongo --eval \"...\""
+## Run local .bashrc(s)
+	if [[ -n $local ]];then
+		if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
+			if [[ -f .bashrc ]];then
+				. .bashrc
+				cd $app 2> /dev/null
+				# if [[ -n $local ]];then
+				# 	run
+				# fi
+			fi
 		fi
 	fi
-fi
-
-if [[ -f ~/app.bashrc ]];then
-	. ~/app.bashrc
-fi
-
+	if [[ -f ~/app.bashrc ]];then
+		. ~/app.bashrc
+	fi
 # Bash Display Settings
 	# Prompt
-		__git_ps1 > /dev/null 2>&1
-		if [[ $? -ne 0 ]]; then
-			gitps1(){
-				echo ''				
-			}
-		else
-			gitps1(){
-				if [[ "$(__git_ps1)" != " (master)" ]];then 
-					echo "$(__git_ps1)"
-				fi
-			}			
-		fi
+		# check if git available
+			__git_ps1 > /dev/null 2>&1
+			if [[ $? -ne 0 ]]; then
+				gitps1(){
+					echo ''				
+				}
+			else
+				gitps1(){
+					if [[ "$(__git_ps1)" != " (master)" ]];then 
+						echo "$(__git_ps1)"
+					fi
+				}			
+			fi
 		PS(){
 			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(gitps1) \e[7m$\e[0m '
 			# PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
