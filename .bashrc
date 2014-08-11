@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.2.5
+version=0.2.7
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
@@ -242,6 +242,23 @@ version=0.2.5
 	osmongodump(){
 		sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
 	}
+## project related
+	# itsmaidup
+		delip(){
+			osmongoeval "db.logs.remove({ip:\\\"$1\\\"})"
+		}
+		oslogsby(){
+		    if [[ -n "$2" ]];then
+		        oslogs f | grep "$1" | grep -v "$2"
+		    else
+		        oslogs f | grep "$1"
+		    fi
+		}
+		new(){
+		    oslogsby /logs? 122.162.62.132    
+		}
+		# echo "delip x.x.x.x ……………… osmongoeval db.logs.remove({ip:\"x.x.x.x\"})"
+
 # # echo "┌  Handy shortcuts  ┐"
 # 	echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
 # 	echo "gl …………………………………………… git log --graph ..."
