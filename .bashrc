@@ -1,11 +1,13 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.2.3
+version=0.2.4
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
-	echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
+	bashver(){
+		echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m\n"
+	}
 # clear
 # Setting some Environment Variables
 	if [[ -z "$PORT" ]];then
