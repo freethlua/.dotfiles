@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.2.7
+version=0.2.8
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
@@ -36,7 +36,7 @@ version=0.2.7
 			echo ${PWD}
 		}
 		dir(){
-			echo ${PWD}; ls -1AhsS --color=always
+			echo ${PWD}; ls -1Ahs --color=always
 		}
 	# disk usage; default 
 		du(){
@@ -116,7 +116,30 @@ version=0.2.7
 			fi
 			git push $f $m $remote
 		}
-# Meta (bash related)
+	# SSH Generate key
+		sshgen(){
+			ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
+			if [[ $? -eq 0 ]];then
+			mv $1_id_rsa* ~/.ssh
+			echo "" >> ~/.ssh/config
+			echo "## $1" >> ~/.ssh/config
+			echo "    # github" >> ~/.ssh/config
+			echo "        Host           $1.github.com" >> ~/.ssh/config
+			echo "        Hostname       github.com" >> ~/.ssh/config
+			echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
+			echo "    # bitbucket" >> ~/.ssh/config
+			echo "        Host           $1.bitbucket.org" >> ~/.ssh/config
+			echo "        Hostname       bitbucket.org" >> ~/.ssh/config
+			echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
+			echo "" >> ~/.ssh/config
+			cat ~/.ssh/$1_id_rsa.pub > /dev/clipboard
+			echo -e "Copied to clipboard : ~/.ssh/$1_id_rsa.pub : $(cat ~/.ssh/$1_id_rsa.pub)"
+			echo "Updated ~/.ssh/config to use URLs like this..."
+			echo -e "git remote add github git@\e[7m$1.\e[0mgithub.com:$1/<project>.git"
+			echo -e "git remote add bitbucket git@\e[7m$1.\e[0mbitbucket.org:$1/<project>.git"
+			fi
+		}
+## Meta (bash related)
 	# save <alias> <command> [argument(s)]
 		# Run a command and save it as alias in your local .bashrc
 		save(){
@@ -144,9 +167,9 @@ version=0.2.7
 	# .npmrc if exists, run with that (usefull for multiple accounts on same machine)
 		npm(){
 			if [[ -f .npmrc ]];then
-				command npm --userconfig=.npmrc $@
+				command npm --no-color --userconfig=.npmrc $@
 			else
-				command npm $@
+				command npm --no-color $@
 			fi
 		}
 	# publish after incrementing version (patch)
@@ -157,6 +180,15 @@ version=0.2.7
 				npm version patch -m $1
 			fi
 			npm publish
+		}
+## --no-color
+	# grunt --no-color
+		grunt(){
+			command grunt --no-color $@
+		}
+	# bower --no-color
+		bower(){
+			command bower --no-color $@
 		}
 ## node app related
 	# run through npm
@@ -243,19 +275,21 @@ version=0.2.7
 		sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
 	}
 ## project related
+	# simpleapp
+		alias sm='clear ; rm -dfr ; yo --no-color simpleapp ; node simpleapp/server/app.js'
 	# itsmaidup
 		delip(){
 			osmongoeval "db.logs.remove({ip:\\\"$1\\\"})"
 		}
 		oslogsby(){
-		    if [[ -n "$2" ]];then
-		        oslogs f | grep "$1" | grep -v "$2"
-		    else
-		        oslogs f | grep "$1"
-		    fi
+			if [[ -n "$2" ]];then
+				oslogs f | grep "$1" | grep -v "$2"
+			else
+				oslogs f | grep "$1"
+			fi
 		}
-		new(){
-		    oslogsby /logs? 122.162.62.132    
+		oslogscheck(){
+			oslogsby /logs? 122.162.62.132	
 		}
 		# echo "delip x.x.x.x ……………… osmongoeval db.logs.remove({ip:\"x.x.x.x\"})"
 
@@ -304,8 +338,10 @@ version=0.2.7
 					fi
 				}			
 			fi
+
 		PS(){
 			PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(gitps1) \e[7m$\e[0m '
+			# http://google.com/search?q=bash+prompt+right+align+???
 			# PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
 			# PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
 			# if [[ -n "$remote" ]];then
