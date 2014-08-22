@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.3.3b
+version=0.3.4
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
 .ver(){
@@ -23,7 +23,10 @@ export bashrcloaded0='true'
         export OPENSHIFT='true'
         export OPENSHIFT_HOME_DIR='app-root/data/'
         export HOME=$HOME$OPENSHIFT_HOME_DIR
-        export LOGS=$OPENSHIFT_LOG_DIR
+        logs(){
+            cd $OPENSHIFT_LOG_DIR
+        }
+        cd ~
     fi
     export winston='winston.log'
     export CLOG='log verbose'
@@ -221,7 +224,9 @@ export bashrcloaded0='true'
         rhc(){
             if [[ "${@: -1}" == "app" ]];then
                 if [[ -n "$osp" ]];then
-                    eval "command rhc ${@:1:$(($#-1))} --server openshift.redhat.com -l $osu -p $osp --token $ost -a $app"
+                    eval "command rhc ${@:1:$(($#-1))} --server openshift.redhat.com -l $osu -p $osp -a $app"
+                elif [[ -n "$ost" ]];then
+                    eval "command rhc ${@:1:$(($#-1))} --token $ost -a $app"
                 else
                     eval "command rhc ${@:1:$(($#-1))} -a $app"
                 fi
