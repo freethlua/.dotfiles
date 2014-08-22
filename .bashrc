@@ -1,7 +1,9 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.3.2
+version=0.3.3a
+if [[ -z "$bashrcloaded0" ]];then
+export $bashrcloaded0="true"
 .ver(){
     echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 }
@@ -363,3 +365,4 @@ version=0.3.2
         #   PROMPT_COMMAND='echo -ne "\033]0;$app$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) ${PWD}\007"'
         # fi
 # ===================================================================================================================== #
+fi
