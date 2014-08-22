@@ -5,6 +5,7 @@ version=0.2.8
 # Run only if never run before
 	if [[ -z "$bashrc0" ]];then
 	export bashrc0='true'
+	echo loading...
 	bashver(){
 		echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 	}
@@ -364,4 +365,5 @@ version=0.2.8
 		# 	PROMPT_COMMAND='echo -ne "\033]0;$app$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) ${PWD}\007"'
 		# fi
 # ===================================================================================================================== #
+else echo skipped.
 fi
