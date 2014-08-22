@@ -326,18 +326,20 @@ version=0.3.1a
             __git_ps1 > /dev/null 2>&1
             if [[ $? -ne 0 ]]; then
                 gitps1(){
-                    echo ''             
+                    echo " "
                 }
             else
                 gitps1(){
                     if [[ "$(__git_ps1)" != " (master)" ]];then 
-                        echo "$(__git_ps1)"
+                        echo "$(__git_ps1) "
+                    else
+                        echo " "
                     fi
                 }           
             fi
 
         PS(){
-            PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(gitps1) \e[7m$\e[0m '
+            PS1='$(if [[ -n "$remote" ]];then echo -e "\e[7m$remote\e[0m ";fi)$(if [[ -n "$app" ]];then echo -e "\e[7m$app\e[0m ";fi)…/${PWD##*/}$(gitps1)\e[7m$\e[0m '
             # http://google.com/search?q=bash+prompt+right+align+???
             # PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
             # PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
