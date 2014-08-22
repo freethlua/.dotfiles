@@ -1,12 +1,12 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.3.0a
+version=0.3.0b
 echo loading... $version
-echo bashrc0=$bashrc0
+echo bashrc1=$bashrc1
 # Run only if never run before
-	if [[ -z "$bashrc0" ]];then
-	export bashrc0='true'
+	if [[ -z "$bashrc1" ]];then
+	export bashrc1='true'
 	echo loading...
 	bashver(){
 		echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
