@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.0
+version=0.4.1
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
 .ver(){
@@ -94,7 +94,7 @@ export bashrcloaded0='true'
             if [[ -n "$2" ]];then
                 branch="$2"
             fi
-            command echo "git pull -t $remote $branch"
+            command git pull -t $remote $branch
         }
     # push [gh/bb/os]
         push(){
@@ -117,7 +117,7 @@ export bashrcloaded0='true'
             if [[ -n "$2" ]];then
                 branch="$2"
             fi            
-            command echo "git push -f $remote $branch"
+            command git push -f $remote $branch
         }
     # SSH Generate key
         sshgen(){
