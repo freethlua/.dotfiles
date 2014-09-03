@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.1
+version=0.4.3
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
 .ver(){
@@ -60,17 +60,17 @@ export bashrcloaded0='true'
         }
 ## Git related
     # Pretty Git graph
-        gl(){
+        l(){
             git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
     # commit auto
-        # cm ["."]
-        cm(){
+        # m ["."]
+        m(){
             git add -A
             if [[ -z "$@" ]];then
-                git commit -m "."
+                command git commit -m "."
             else
-                git commit -m "$@"
+                command git commit -m "$@"
             fi
         }
     # pull [gh/bb/os]
@@ -142,6 +142,14 @@ export bashrcloaded0='true'
             echo -e "git remote add bitbucket git@\e[7m$1.\e[0mbitbucket.org:$1/<project>.git"
             fi
         }
+    # # git rewrite usernames in history
+    #     gh(){
+    #         if [[ -n "$1" && -n "$2" ]];then
+    #             local from="$1"
+    #             local to="$2"
+    #             command git filter-branch --commit-filter 'if [ "$GIT_COMMITTER_NAME" = "x" ]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
+    #         fi
+    #     }
 ## Meta (bash related)
     # save <alias> <command> [argument(s)]
         # Run a command and save it as alias in your local .bashrc
