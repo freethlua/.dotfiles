@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.3
+version=0.4.4
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
 .ver(){
@@ -66,12 +66,26 @@ export bashrcloaded0='true'
     # commit auto
         # m ["."]
         m(){
-            git add -A
+            command git add -A
             if [[ -z "$@" ]];then
                 command git commit -m "."
             else
                 command git commit -m "$@"
             fi
+        }
+    # git remote
+        # gr
+        gr(){
+            if[[ -z "$@" ]];then
+                command git remote -v
+            else
+                command git remote $@
+            fi
+        }
+    # git status
+        # gs
+        gs(){
+            command git status
         }
     # pull [gh/bb/os]
         pull(){
