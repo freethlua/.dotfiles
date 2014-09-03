@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.3.4
+version=0.4.0
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
 .ver(){
@@ -75,48 +75,49 @@ export bashrcloaded0='true'
         }
     # pull [gh/bb/os]
         pull(){
-            local remote=$1
-            if [[ $remote == "gh" ]];then
-                remote=github
+            local remote="origin"
+            if [[ $1 == "gh" ]];then
+                remote="github"
             fi
-            if [[ $remote == "bb" ]];then
-                remote=bitbucket
+            if [[ $1 == "bb" ]];then
+                remote="bitbucket"
             fi
-            if [[ $remote == "os" ]];then
-                remote=openshift
+            if [[ $1 == "os" ]];then
+                remote="openshift"
+            fi
+            local branch="master"
+            if [[ $remote == "origin" ]];then
+                if [[ -n "$1" ]];then
+                    branch="$1"
+                fi
             fi
             if [[ -n "$2" ]];then
-                git pull -t $remote $2
-            else
-                git pull -t $remote master
+                branch="$2"
             fi
+            command echo "git pull -t $remote $branch"
         }
     # push [gh/bb/os]
         push(){
-            local remote='unset'
-            local m=''
-            local f=''
-            if [[ "$1" == "f" ]];then
-                local f='-f'
-                remote=$2
-            else
-                local f=''
-                remote=$1
+            local remote="origin"
+            if [[ $1 == "gh" ]];then
+                remote="github"
             fi
-            local m=''
-            if [[ $remote == "gh" ]];then
-                m='--mirror'
-                remote=github
+            if [[ $1 == "bb" ]];then
+                remote="bitbucket"
             fi
-            if [[ $remote == "bb" ]];then
-                m='--mirror'
-                remote=bitbucket
+            if [[ $1 == "os" ]];then
+                remote="openshift"
             fi
-            if [[ $remote == "os" ]];then
-                m='--mirror'
-                remote=openshift
+            local branch="--mirror"
+            if [[ $remote == "origin" ]];then
+                if [[ -n "$1" ]];then
+                    branch="$1"
+                fi
             fi
-            git push $f $m $remote
+            if [[ -n "$2" ]];then
+                branch="$2"
+            fi            
+            command echo "git push -f $remote $branch"
         }
     # SSH Generate key
         sshgen(){
@@ -188,9 +189,19 @@ export bashrcloaded0='true'
         grunt(){
             command grunt --no-color $@
         }
+        g(){
+            grunt $@
+        }
     # bower --no-color
         bower(){
-            command bower --no-color $@
+            if [[ -z "$@" ]];then
+                command bower --no-color install
+            else
+                command bower --no-color $@
+            fi
+        }
+        b(){
+            bower $@
         }
 ## node app related
     # run through npm
@@ -199,6 +210,9 @@ export bashrcloaded0='true'
                 npm install ${@:2}
             fi
             command npm start
+        }
+        r(){
+            run $@
         }
 ## yoman related
     # run without colors by default 
@@ -344,9 +358,33 @@ export bashrcloaded0='true'
                     fi
                 }           
             fi
+        PSremote(){
+            if [[ -n "$remote" ]];then 
+                echo -e "\e[7m$remote\e[0m "
+            fi
+        }
+        PSappname(){
+            if [[ -n "$app" ]];then 
+                echo -e "\e[7m$app\e[0m "
+            fi
+        }
+        PSdir(){
+            if [[ "${PWD##*/}" == "$app" ]];then 
+                echo -e "\e[0m./\e[0m"
+            else
+                echo -e "\e[0m…/${PWD##*/}\e[0m"
+            fi
+        }
+        PSgit(){
+            gitps1
+        }
+        PSpromptsymbol(){
+            echo -e "\e[7m$\e[0m "
+        }
 
-        PS(){
-            PS1='$(if [[ -n "$remote" ]];then echo -e "\e[7m$remote\e[0m ";fi)$(if [[ -n "$app" ]];then echo -e "\e[7m$app\e[0m ";fi)…/${PWD##*/}$(gitps1)\e[7m$\e[0m '
+        p(){
+            PS1='$(PSremote)$(PSappname)$(PSdir)$(PSgit)$(PSpromptsymbol)'
+            # PS1='$(if [[ -n "$remote" ]];then echo -e "\e[7m$remote\e[0m ";fi)$(if [[ -n "$app" ]];then echo -e "\e[7m$app\e[0m ";fi)…/${PWD##*/}$(gitps1)\e[7m$\e[0m '
             # http://google.com/search?q=bash+prompt+right+align+???
             # PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
             # PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/} \e[7m$\e[0m '
@@ -361,7 +399,7 @@ export bashrcloaded0='true'
             # PS1='\[\033[33m\]\w$(__git_ps1)\[\033[0m\] $'
             # PS1='\[\033[0m\]\[\033[32m\]\u@\h \[\033[33m\]\w$(__git_ps1)\[\033[0m\]\n$'
         }
-        PS
+        p
     # Title
         PROMPT_COMMAND='echo -ne "\033]0;$app$(gitps1) ${PWD}\007"'
         # if [[ -n "$OPENSHIFT" ]];then
