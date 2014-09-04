@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.10b
+version=0.4.10c
 echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
@@ -158,7 +158,7 @@ function .v(){
             fi
         }
     # # git rewrite usernames in history
-    function #     gh(){
+    #     function gh(){
     #         if [[ -n "$1" && -n "$2" ]];then
     #             local from="$1"
     #             local to="$2"
