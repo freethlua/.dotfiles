@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.5
+version=0.4.6
 echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
@@ -60,10 +60,6 @@ export bashrcloaded0='true'
             fi
         }
 ## Git related
-    # Pretty Git graph
-        l(){
-            command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
-        }
     # commit auto
         # m ["."]
         m(){
@@ -73,6 +69,10 @@ export bashrcloaded0='true'
             else
                 command git commit -m "$@"
             fi
+        }
+    # Pretty Git graph
+        l(){
+            command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
     # git remote
         # gr
