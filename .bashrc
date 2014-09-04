@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.8a
+version=0.4.9a
 echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
@@ -61,11 +61,13 @@ export bashrcloaded0='true'
         }
 ## Git related
     # Pretty Git graph
-        gl(){
+        unset -f l
+        l(){
             command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
     # commit auto
         # m ["."]
+        unset -f m
         m(){
             command git add -A
             if [[ -z "$@" ]];then
@@ -76,6 +78,7 @@ export bashrcloaded0='true'
         }
     # git remote
         # gr
+        unset -f gr
         gr(){
             if [[ -z "$@" ]];then
                 command git remote -v
@@ -85,7 +88,8 @@ export bashrcloaded0='true'
         }
     # git status
         # gs
-        gs(){
+        unset -f s
+        s(){
             command git status
         }
     # pull [gh/bb/os]
@@ -212,6 +216,7 @@ export bashrcloaded0='true'
         grunt(){
             command grunt --no-color $@
         }
+        unset -f g
         g(){
             grunt $@
         }
@@ -223,17 +228,20 @@ export bashrcloaded0='true'
                 command bower --no-color $@
             fi
         }
+        unset -f b
         b(){
             bower $@
         }
 ## node app related
     # run through npm
+        unset -f run
         run(){
             if [[ "$1" == "update" ]];then
                 npm install ${@:2}
             fi
             command npm start
         }
+        unset -f r
         r(){
             run $@
         }
