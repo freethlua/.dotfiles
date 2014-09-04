@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.9d
+version=0.4.10a
 echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
-.v(){
+function .v(){
     echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 }
 # clear
@@ -24,7 +24,7 @@ export bashrcloaded0='true'
         export OPENSHIFT='true'
         export OPENSHIFT_HOME_DIR='app-root/data/'
         export HOME=$HOME$OPENSHIFT_HOME_DIR
-        logs(){
+        function logs(){
             cd $OPENSHIFT_LOG_DIR
         }
         cd ~
@@ -35,14 +35,14 @@ export bashrcloaded0='true'
     export CLOG=''
 ## Basic commands
     # directory
-        d(){
+        function d(){
             echo ${PWD}
         }
-        dir(){
+        function dir(){
             echo ${PWD}; ls -1Ahs --color=always
         }
     # disk usage; default 
-        du(){
+        function du(){
             d
             if [[ -n "$@" ]];then
                 command du $@
@@ -61,15 +61,12 @@ export bashrcloaded0='true'
         }
 ## Git related
     # Pretty Git graph
-        unset l
-        unset -f l
         function l(){
             command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
     # commit auto
         # m ["."]
-        unset -f m
-        m(){
+        function m(){
             command git add -A
             if [[ -z "$@" ]];then
                 command git commit -m "."
@@ -79,8 +76,7 @@ export bashrcloaded0='true'
         }
     # git remote
         # gr
-        unset -f gr
-        gr(){
+        function gr(){
             if [[ -z "$@" ]];then
                 command git remote -v
             else
@@ -89,12 +85,11 @@ export bashrcloaded0='true'
         }
     # git status
         # gs
-        unset -f s
-        s(){
+        function s(){
             command git status
         }
     # pull [gh/bb/os]
-        pull(){
+        function pull(){
             local remote="origin"
             if [[ $1 == "gh" ]];then
                 remote="github"
@@ -117,7 +112,7 @@ export bashrcloaded0='true'
             command git pull -t $remote $branch
         }
     # push [gh/bb/os]
-        push(){
+        function push(){
             local remote="origin"
             if [[ $1 == "gh" ]];then
                 remote="github"
@@ -140,7 +135,7 @@ export bashrcloaded0='true'
             command git push -f $remote $branch
         }
     # SSH Generate key
-        sshgen(){
+        function sshgen(){
             ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
             if [[ $? -eq 0 ]];then
             mv $1_id_rsa* ~/.ssh
@@ -163,7 +158,7 @@ export bashrcloaded0='true'
             fi
         }
     # # git rewrite usernames in history
-    #     gh(){
+    function #     gh(){
     #         if [[ -n "$1" && -n "$2" ]];then
     #             local from="$1"
     #             local to="$2"
@@ -173,7 +168,7 @@ export bashrcloaded0='true'
 ## Meta (bash related)
     # save <alias> <command> [argument(s)]
         # Run a command and save it as alias in your local .bashrc
-        save(){
+        function save(){
             eval "${@:2}"
             if [[ $? -eq 0 ]]; then
                 str="alias $1='${@:2}'"
@@ -182,7 +177,7 @@ export bashrcloaded0='true'
                 fi
         }
     # edit yourlocal .bashrc
-        rc(){
+        function rc(){
             if [[ "$1" == "v" ]];then
                 vim ~/.bashrc
             else
@@ -196,7 +191,7 @@ export bashrcloaded0='true'
         }
 ## npm related
     # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
-        npm(){
+        function npm(){
             if [[ -f .npmrc ]];then
                 command npm --no-color --userconfig=.npmrc $@
             else
@@ -204,7 +199,7 @@ export bashrcloaded0='true'
             fi
         }
     # publish after incrementing version (patch)
-        pub(){
+        function pub(){
             if [[ -z "$@" ]]; then
                 npm version patch
             else
@@ -214,46 +209,42 @@ export bashrcloaded0='true'
         }
 ## --no-color
     # grunt --no-color
-        grunt(){
+        function grunt(){
             command grunt --no-color $@
         }
-        unset -f g
-        g(){
+        function g(){
             grunt $@
         }
     # bower --no-color
-        bower(){
+        function bower(){
             if [[ -z "$@" ]];then
                 command bower --no-color install
             else
                 command bower --no-color $@
             fi
         }
-        unset -f b
-        b(){
+        function b(){
             bower $@
         }
 ## node app related
     # run through npm
-        unset -f run
-        run(){
+        function run(){
             if [[ "$1" == "update" ]];then
                 npm install ${@:2}
             fi
             command npm start
         }
-        unset -f r
-        r(){
+        function r(){
             run $@
         }
 ## yoman related
     # run without colors by default 
-        yo(){
+        function yo(){
             command yo --no-color $@
         }
 ## mocha
     # run mocha without colors by default
-        mocha(){
+        function mocha(){
             command mocha --no-colors $@
         }
 ## opsnshift related
@@ -262,12 +253,12 @@ export bashrcloaded0='true'
         # export osp='password'
         # export ost='token_-_-_-_-_-_-_-...'
         # set password at runtime (if you don't wanna store it in your local .bashrc)
-            osp(){
+            function osp(){
                 export osp=$@
             }   
     # rhc <commands> ["app"]
         # add "app" at the end to add "-a $app" at the end. (store your app's name in local .bashrc)
-        rhc(){
+        function rhc(){
             if [[ "${@: -1}" == "app" ]];then
                 if [[ -n "$osp" ]];then
                     eval "command rhc ${@:1:$(($#-1))} --server openshift.redhat.com -l $osu -p $osp -a $app"
@@ -281,7 +272,7 @@ export bashrcloaded0='true'
             fi
         }
     # ssh into opsnshift
-        sshos(){
+        function sshos(){
             rhc ssh $@ app
         }
     # oslogs [f][r]
@@ -289,7 +280,7 @@ export bashrcloaded0='true'
         # default tailed logs
         # f=full logs from file
         # r= in reverse order (latest bottom)
-        oslogs(){
+        function oslogs(){
             if [[ "${1:0:1}" == "f" ]];then
                 if [[ "${1:1:2}" == "r" ]] || [[ "${2:0:1}" == "r" ]];then
                     sshos "--command 'tac app-root/logs/nodejs.log'"
@@ -301,44 +292,44 @@ export bashrcloaded0='true'
             fi
         }
 ## mongoDB related
-    mongo(){
+    function mongo(){
         if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
             command mongo --host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD $@ $app
         else
             command mongo $@ $app
         fi
     }
-    mongodb(){
+    function mongodb(){
         if [[ -n "$local" ]];then
             start C:\\localhost\\mongodb\\Run.BAT
         else
             /home/ubuntu/mongod
         fi
     }
-    mongoeval(){
+    function mongoeval(){
         mongo --eval $1
         }
-    osmongoeval(){
+    function osmongoeval(){
         sshos "--command 'mongo --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD --eval \"$1\" $app'"
         }
-    osmongodump(){
+    function osmongodump(){
         sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
     }
 ## project related
     # simpleapp
         alias sm='clear ; rm -dfr ; yo --no-color simpleapp ; node simpleapp/server/app.js'
     # itsmaidup
-        delip(){
+        function delip(){
             osmongoeval "db.logs.remove({ip:\\\"$1\\\"})"
         }
-        oslogsby(){
+        function oslogsby(){
             if [[ -n "$2" ]];then
                 oslogs f | grep "$1" | grep -v "$2"
             else
                 oslogs f | grep "$1"
             fi
         }
-        oslogscheck(){
+        function oslogscheck(){
             oslogsby /logs? 122.162.62.132  
         }
         # echo "delip x.x.x.x ……………… osmongoeval db.logs.remove({ip:\"x.x.x.x\"})"
@@ -378,11 +369,11 @@ export bashrcloaded0='true'
         # check if git available
             __git_ps1 > /dev/null 2>&1
             if [[ $? -ne 0 ]]; then
-                gitps1(){
+                function gitps1(){
                     echo " "
                 }
             else
-                gitps1(){
+                function gitps1(){
                     if [[ "$(__git_ps1)" != " (master)" ]];then 
                         echo "$(__git_ps1) "
                     else
@@ -390,31 +381,31 @@ export bashrcloaded0='true'
                     fi
                 }           
             fi
-        PSremote(){
+        function PSremote(){
             if [[ -n "$remote" ]];then 
                 echo -e "\e[7m$remote\e[0m "
             fi
         }
-        PSappname(){
+        function PSappname(){
             if [[ -n "$app" ]];then 
                 echo -e "\e[7m$app\e[0m "
             fi
         }
-        PSdir(){
+        function PSdir(){
             if [[ "${PWD##*/}" == "$app" ]];then 
                 echo -e "\e[0m./\e[0m"
             else
                 echo -e "\e[0m…/${PWD##*/}\e[0m"
             fi
         }
-        PSgit(){
+        function PSgit(){
             gitps1
         }
-        PSpromptsymbol(){
+        function PSpromptsymbol(){
             echo -e "\e[7m$\e[0m "
         }
 
-        p(){
+        function p(){
             PS1='$(PSremote)$(PSappname)$(PSdir)$(PSgit)$(PSpromptsymbol)'
             # PS1='$(if [[ -n "$remote" ]];then echo -e "\e[7m$remote\e[0m ";fi)$(if [[ -n "$app" ]];then echo -e "\e[7m$app\e[0m ";fi)…/${PWD##*/}$(gitps1)\e[7m$\e[0m '
             # http://google.com/search?q=bash+prompt+right+align+???
