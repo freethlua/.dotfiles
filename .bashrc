@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.9b
+version=0.4.9c
 echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
@@ -61,9 +61,7 @@ export bashrcloaded0='true'
         }
 ## Git related
     # Pretty Git graph
-        unset l
-        unset -f l
-        l(){
+        function l(){
             command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
     # commit auto
