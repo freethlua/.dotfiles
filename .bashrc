@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.4.11a
+version=0.5.0a
 # echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
