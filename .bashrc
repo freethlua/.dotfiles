@@ -2,6 +2,7 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 version=0.4.5
+echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
 .ver(){
@@ -61,7 +62,7 @@ export bashrcloaded0='true'
 ## Git related
     # Pretty Git graph
         l(){
-            git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
+            command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
     # commit auto
         # m ["."]
