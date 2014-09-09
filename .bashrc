@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.5.0a
+version=0.5.2a
 # echo $version
 if [[ -z "$bashrcloaded0" ]];then
 export bashrcloaded0='true'
@@ -34,12 +34,16 @@ function .v(){
     export CLOG='log verbose info'
     export CLOG=''
 ## Basic commands
+    # exit
+        function e(){
+            command exit
+        }
     # directory
         function d(){
-            echo ${PWD}
+            command echo ${PWD}
         }
         function dir(){
-            echo ${PWD}; ls -1Ahs --color=always
+            command echo ${PWD}; ls -1Ahs --color=always
         }
     # disk usage; default 
         function du(){
@@ -61,11 +65,14 @@ function .v(){
         }
 ## Git related
     # Pretty Git graph
-        function l(){
+        function gl(){
             command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
+    # git gui and gitk
+        function gui(){
+            command git gui & gitk
+        }
     # commit auto
-        # m ["."]
         function m(){
             command git add -A
             if [[ -z "$@" ]];then
@@ -75,8 +82,7 @@ function .v(){
             fi
         }
     # git remote
-        # gr
-        function gr(){
+        function remote(){
             if [[ -z "$@" ]];then
                 command git remote -v
             else
@@ -84,9 +90,8 @@ function .v(){
             fi
         }
     # git status
-        # gs
-        function s(){
-            command git status
+        function status(){
+            command git status $@
         }
     # pull [gh/bb/os]
         function pull(){
@@ -135,27 +140,45 @@ function .v(){
             command git push -f $remote $branch
         }
     # SSH Generate key
-        function sshgen(){
-            ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
+        function sshg(){
+            command ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
             if [[ $? -eq 0 ]];then
-            mv $1_id_rsa* ~/.ssh
-            echo "" >> ~/.ssh/config
-            echo "## $1" >> ~/.ssh/config
-            echo "    # github" >> ~/.ssh/config
-            echo "        Host           $1.github.com" >> ~/.ssh/config
-            echo "        Hostname       github.com" >> ~/.ssh/config
-            echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
-            echo "    # bitbucket" >> ~/.ssh/config
-            echo "        Host           $1.bitbucket.org" >> ~/.ssh/config
-            echo "        Hostname       bitbucket.org" >> ~/.ssh/config
-            echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
-            echo "" >> ~/.ssh/config
-            cat ~/.ssh/$1_id_rsa.pub > /dev/clipboard
-            echo -e "Copied to clipboard : ~/.ssh/$1_id_rsa.pub : $(cat ~/.ssh/$1_id_rsa.pub)"
-            echo "Updated ~/.ssh/config to use URLs like this..."
-            echo -e "git remote add github git@\e[7m$1.\e[0mgithub.com:$1/<project>.git"
-            echo -e "git remote add bitbucket git@\e[7m$1.\e[0mbitbucket.org:$1/<project>.git"
+            command mv $1_id_rsa* ~/.ssh
+            command echo "" >> ~/.ssh/config
+            command echo "## $1" >> ~/.ssh/config
+            command echo "    # github" >> ~/.ssh/config
+            command echo "        Host           $1.github.com" >> ~/.ssh/config
+            command echo "        Hostname       github.com" >> ~/.ssh/config
+            command echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
+            command echo "    # bitbucket" >> ~/.ssh/config
+            command echo "        Host           $1.bitbucket.org" >> ~/.ssh/config
+            command echo "        Hostname       bitbucket.org" >> ~/.ssh/config
+            command echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
+            command echo "" >> ~/.ssh/config
+            command cat ~/.ssh/$1_id_rsa.pub > /dev/clipboard
+            command echo -e "Copied to clipboard : ~/.ssh/$1_id_rsa.pub : $(cat ~/.ssh/$1_id_rsa.pub)"
+            command echo "Updated ~/.ssh/config to use URLs like this..."
+            command echo -e "git remote add github git@\e[7m$1.\e[0mgithub.com:$1/<project>.git"
+            command echo -e "git remote add bitbucket git@\e[7m$1.\e[0mbitbucket.org:$1/<project>.git"
             fi
+        }
+        function sshk(){
+            sshg $@
+        }
+        function sshkg(){
+            sshg $@
+        }
+        function sshkeygen(){
+            sshg $@
+        }
+        function sshkgen(){
+            sshg $@
+        }
+        function sshkgn(){
+            sshg $@
+        }
+        function sshkn(){
+            sshg $@
         }
     # # git rewrite usernames in history
     #     function gh(){
@@ -189,24 +212,6 @@ function .v(){
                 fi
             fi
         }
-## npm related
-    # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
-        function npm(){
-            if [[ -f .npmrc ]];then
-                command npm --no-color --userconfig=.npmrc $@
-            else
-                command npm --no-color $@
-            fi
-        }
-    # publish after incrementing version (patch)
-        function pub(){
-            if [[ -z "$@" ]]; then
-                npm version patch
-            else
-                npm version patch -m $1
-            fi
-            npm publish
-        }
 ## --no-color
     # grunt --no-color
         function grunt(){
@@ -226,15 +231,36 @@ function .v(){
         function b(){
             bower $@
         }
+## npm related
+    # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
+        function npm(){
+            if [[ -f .npmrc ]];then
+                command npm --no-color --userconfig=.npmrc $@
+            else
+                command npm --no-color $@
+            fi
+        }
+    # publish after incrementing version (patch)
+        function pub(){
+            if [[ -z "$@" ]]; then
+                npm version patch
+            else
+                npm version patch -m $1
+            fi
+            npm publish
+        }
 ## node app related
     # run through npm
         function run(){
             if [[ "$1" == "update" ]];then
                 npm install ${@:2}
             fi
-            command npm start
+            npm start
         }
         function r(){
+            run $@
+        }
+        function s(){
             run $@
         }
 ## yoman related
