@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.5.3a
+version=0.5.5a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -62,6 +62,9 @@ function .v(){
                     fi
                 fi
             fi
+        }
+        function size(){
+            du
         }
 ## Git related
     # Pretty Git graph
@@ -449,6 +452,12 @@ function .v(){
             # PS1='\[\033[0m\]\[\033[32m\]\u@\h \[\033[33m\]\w$(__git_ps1)\[\033[0m\]\n$'
         }
         p
+        function ps(){
+            p
+        }
+        function ps1(){
+            p
+        }
     # Title
         PROMPT_COMMAND='echo -ne "\033]0;$app$(gitps1) ${PWD}\007"'
         # if [[ -n "$OPENSHIFT" ]];then
