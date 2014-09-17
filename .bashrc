@@ -1,10 +1,10 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.5.2a
+version=0.5.3a
 # echo $version
-if [[ -z "$bashrcloaded0" ]];then
-export bashrcloaded0='true'
+if [[ -z "$bashrcloaded053a" ]];then
+export bashrcloaded053a='true'
 function .v(){
     echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 }
@@ -45,7 +45,7 @@ function .v(){
         function dir(){
             command echo ${PWD}; ls -1Ahs --color=always
         }
-    # disk usage; default 
+    # disk usage; default
         function du(){
             d
             if [[ -n "$@" ]];then
@@ -136,7 +136,7 @@ function .v(){
             fi
             if [[ -n "$2" ]];then
                 branch="$2"
-            fi            
+            fi
             command git push -f $remote $branch
         }
     # SSH Generate key
@@ -204,7 +204,7 @@ function .v(){
             if [[ "$1" == "v" ]];then
                 vim ~/.bashrc
             else
-                command -v "C:\Program Files (x86)\Sublime Text 2\sublime_text.exe" 
+                command -v "C:\Program Files (x86)\Sublime Text 2\sublime_text.exe"
                 if [[ "$?" == 0 ]];then
                     "C:\Program Files (x86)\Sublime Text 2\sublime_text.exe" ~/.bashrc
                 else
@@ -264,7 +264,7 @@ function .v(){
             run $@
         }
 ## yoman related
-    # run without colors by default 
+    # run without colors by default
         function yo(){
             command yo --no-color $@
         }
@@ -281,7 +281,7 @@ function .v(){
         # set password at runtime (if you don't wanna store it in your local .bashrc)
             function osp(){
                 export osp=$@
-            }   
+            }
     # rhc <commands> ["app"]
         # add "app" at the end to add "-a $app" at the end. (store your app's name in local .bashrc)
         function rhc(){
@@ -302,7 +302,7 @@ function .v(){
             rhc ssh $@ app
         }
     # oslogs [f][r]
-        # view oslogs of nodejs.log; 
+        # view oslogs of nodejs.log;
         # default tailed logs
         # f=full logs from file
         # r= in reverse order (latest bottom)
@@ -356,7 +356,7 @@ function .v(){
             fi
         }
         function oslogscheck(){
-            oslogsby /logs? 122.162.62.132  
+            oslogsby /logs? 122.162.62.132
         }
         # echo "delip x.x.x.x ……………… osmongoeval db.logs.remove({ip:\"x.x.x.x\"})"
 
@@ -400,25 +400,25 @@ function .v(){
                 }
             else
                 function gitps1(){
-                    if [[ "$(__git_ps1)" != " (master)" ]];then 
+                    if [[ "$(__git_ps1)" != " (master)" ]];then
                         echo "$(__git_ps1) "
                     else
                         echo " "
                     fi
-                }           
+                }
             fi
         function PSremote(){
-            if [[ -n "$remote" ]];then 
+            if [[ -n "$remote" ]];then
                 echo -e "\e[7m$remote\e[0m "
             fi
         }
         function PSappname(){
-            if [[ -n "$app" ]];then 
+            if [[ -n "$app" ]];then
                 echo -e "\e[7m$app\e[0m "
             fi
         }
         function PSdir(){
-            if [[ "${PWD##*/}" == "$app" ]];then 
+            if [[ "${PWD##*/}" == "$app" ]];then
                 echo -e "\e[0m./\e[0m"
             else
                 echo -e "\e[0m…/${PWD##*/}\e[0m"
