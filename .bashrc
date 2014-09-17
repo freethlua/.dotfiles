@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.5.8a
+version=0.5.9a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -68,7 +68,7 @@ function .v(){
         }
     # ls
         function ls(){
-            command ls -a $@
+            command ls -A $@
         }
     # remove
         function rm(){
