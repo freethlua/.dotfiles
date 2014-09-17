@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.5.5a
+version=0.5.6a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -65,6 +65,10 @@ function .v(){
         }
         function size(){
             du
+        }
+    # remove
+        function rm(){
+            command rm -rf $@
         }
 ## Git related
     # Pretty Git graph
