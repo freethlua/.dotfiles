@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.5.9a
+version=0.6.2a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -77,6 +77,19 @@ function .v(){
         function del(){
             rm $@
         }
+    # Last command execution time
+        preexec () {
+            last_execution_time=`date +%s`
+        }
+        preexec_invoke_exec () {
+            [ -n "$COMP_LINE" ] && return  # do nothing if completing
+            # echo "BASH_COMMAND= $BASH_COMMAND"
+            # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
+            [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
+            local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
+            preexec "$this_command"
+        }
+        trap 'preexec_invoke_exec' DEBUG
 ## Git related
     # Pretty Git graph
         function gl(){
@@ -152,6 +165,7 @@ function .v(){
                 branch="$2"
             fi
             command git push -f $remote $branch
+            printf "\a\a\a\a"
         }
     # SSH Generate key
         function sshg(){
@@ -288,7 +302,8 @@ function .v(){
             command mocha --no-colors $@
         }
 ## opsnshift related
-    # ! Store your username password and maybe token in your local .bashrc
+    # ! Store your appname, username, password, maybe token in your local .bashrc
+        # export app='appname'
         # export osu='username'
         # export osp='password'
         # export ost='token_-_-_-_-_-_-_-...'
@@ -296,24 +311,23 @@ function .v(){
             function osp(){
                 export osp=$@
             }
-    # rhc <commands> ["app"]
-        # add "app" at the end to add "-a $app" at the end. (store your app's name in local .bashrc)
+    # rhc <commands>
         function rhc(){
-            if [[ "${@: -1}" == "app" ]];then
-                if [[ -n "$osp" ]];then
-                    eval "command rhc ${@:1:$(($#-1))} --server openshift.redhat.com -l $osu -p $osp -a $app"
-                elif [[ -n "$ost" ]];then
-                    eval "command rhc ${@:1:$(($#-1))} --token $ost -a $app"
-                else
-                    eval "command rhc ${@:1:$(($#-1))} -a $app"
-                fi
+            if [[ -n "$osp" ]];then
+                local auth="--server openshift.redhat.com -l $osu -p $osp"
+            elif [[ -n "$ost" ]];then
+                local auth="--token $ost"
+            fi
+            # commands with a hyphen "-" in them automatically add your app name.
+            if [[ $1 == *-* ]];then
+                eval "command rhc $@ $auth -a $app"
             else
-                eval "command rhc $@"
+                eval "command rhc $@ $auth"
             fi
         }
     # ssh into opsnshift
         function sshos(){
-            rhc ssh $@ app
+            rhc ssh $@ -a $app
         }
     # oslogs [f][r]
         # view oslogs of nodejs.log;
@@ -328,7 +342,7 @@ function .v(){
                     sshos "--command 'cat app-root/logs/nodejs.log'"
                 fi
             else
-                rhc tail -f app-root/logs/nodejs.log app
+                rhc tail -f app-root/logs/nodejs.log -a $app
             fi
         }
 ## mongoDB related
@@ -470,11 +484,22 @@ function .v(){
             p
         }
     # Title
-        PROMPT_COMMAND='echo -ne "\033]0;$app$(gitps1) ${PWD}\007"'
-        # if [[ -n "$OPENSHIFT" ]];then
-        #   PROMPT_COMMAND='echo -ne "\033]0;$app ($remote) ${PWD}\007"'
-        # else
-        #   PROMPT_COMMAND='echo -ne "\033]0;$app$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) ${PWD}\007"'
-        # fi
+        function prompt_command(){
+            # Title bar
+                echo -ne "\033]0;$app$(gitps1) ${PWD}\007"
+            # Last command execution time
+                last_execution_time=$((`date +%s`-last_execution_time))
+                if [[ $last_execution_time -gt 60 ]];then
+                    last_execution_time=$((last_execution_time/60))
+                    last_execution_time_unit="m"
+                else
+                    last_execution_time_unit="s"
+                    if [[ $last_execution_time -lt 5 ]];then
+                        return
+                    fi
+                fi
+                echo -e "\e[7m$last_execution_time$last_execution_time_unit\e[0m"
+        }
+        PROMPT_COMMAND='prompt_command'
 # ===================================================================================================================== #
 fi
