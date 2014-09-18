@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.5a
+version=0.6.5b
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -58,7 +58,7 @@ function .v(){
                 return
             fi
         fi
-        echo -e "\7\e[7m$last_execution_time$last_execution_time_unit\e[0m\7"
+        echo -e "\a\e[7m$last_execution_time$last_execution_time_unit\e[0m\a"
     }
 ## Basic commands
     # exit
