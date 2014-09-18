@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.2a
+version=0.6.5a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -9,6 +9,7 @@ function .v(){
     echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 }
 # clear
+
 # Setting some Environment Variables
     if [[ -z "$PORT" ]];then
         export local='true'
@@ -33,6 +34,32 @@ function .v(){
     export CLOG='log verbose'
     export CLOG='log verbose info'
     export CLOG=''
+# Last command execution time
+    preexec(){
+        last_execution_time=`date +%s`
+    }
+    preexec_invoke_exec(){
+        [ -n "$COMP_LINE" ] && return  # do nothing if completing
+        # echo "BASH_COMMAND= $BASH_COMMAND"
+        # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
+        [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
+        local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
+        preexec "$this_command"
+    }
+    trap 'preexec_invoke_exec' DEBUG
+    last_execution_time_prompt_command(){
+        last_execution_time=$((`date +%s`-last_execution_time))
+        if [[ $last_execution_time -gt 60 ]];then
+            last_execution_time=$((last_execution_time/60))
+            last_execution_time_unit="m"
+        else
+            last_execution_time_unit="s"
+            if [[ $last_execution_time -lt 5 ]];then
+                return
+            fi
+        fi
+        echo -e "\7\e[7m$last_execution_time$last_execution_time_unit\e[0m\7"
+    }
 ## Basic commands
     # exit
         function e(){
@@ -77,19 +104,6 @@ function .v(){
         function del(){
             rm $@
         }
-    # Last command execution time
-        preexec () {
-            last_execution_time=`date +%s`
-        }
-        preexec_invoke_exec () {
-            [ -n "$COMP_LINE" ] && return  # do nothing if completing
-            # echo "BASH_COMMAND= $BASH_COMMAND"
-            # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
-            [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
-            local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
-            preexec "$this_command"
-        }
-        trap 'preexec_invoke_exec' DEBUG
 ## Git related
     # Pretty Git graph
         function gl(){
@@ -97,16 +111,19 @@ function .v(){
         }
     # git gui and gitk
         function gui(){
-            command git gui & gitk
+            command gitk & git gui
         }
     # commit auto
-        function m(){
+        function gm(){
             command git add -A
             if [[ -z "$@" ]];then
                 command git commit -m "."
             else
                 command git commit -m "$@"
             fi
+        }
+        function gc(){
+            gm
         }
     # git remote
         function remote(){
@@ -488,17 +505,7 @@ function .v(){
             # Title bar
                 echo -ne "\033]0;$app$(gitps1) ${PWD}\007"
             # Last command execution time
-                last_execution_time=$((`date +%s`-last_execution_time))
-                if [[ $last_execution_time -gt 60 ]];then
-                    last_execution_time=$((last_execution_time/60))
-                    last_execution_time_unit="m"
-                else
-                    last_execution_time_unit="s"
-                    if [[ $last_execution_time -lt 5 ]];then
-                        return
-                    fi
-                fi
-                echo -e "\e[7m$last_execution_time$last_execution_time_unit\e[0m"
+                last_execution_time_prompt_command
         }
         PROMPT_COMMAND='prompt_command'
 # ===================================================================================================================== #
