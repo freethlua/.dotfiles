@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.6a
+version=0.6.7a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -262,31 +262,46 @@ if [[ -t 1 ]];then
     export CLOG='log verbose info'
     export CLOG=''
 # Last command execution time
-    preexec(){
-        last_execution_time=`date +%s`
+    function timer_start {
+        timer=${timer:-$SECONDS}
     }
-    preexec_invoke_exec(){
-        [ -n "$COMP_LINE" ] && return  # do nothing if completing
-        # echo "BASH_COMMAND= $BASH_COMMAND"
-        # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
-        [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
-        local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
-        preexec "$this_command"
-    }
-    trap 'preexec_invoke_exec' DEBUG
-    last_execution_time_prompt_command(){
-        last_execution_time=$((`date +%s`-last_execution_time))
-        if [[ $last_execution_time -gt 60 ]];then
-            last_execution_time=$((last_execution_time/60))
-            last_execution_time_unit="m"
+    function timer_stop {
+        timer_show=$(($SECONDS - $timer))
+        unset timer
+        if [[ $timer_show -gt 60 ]];then
+            timer_show=$((timer_show/60))
+            timer_show_unit="m"
         else
-            last_execution_time_unit="s"
-            if [[ $last_execution_time -lt 5 ]];then
-                return
-            fi
+            timer_show_unit="s"
+            [[ $timer_show -lt 5 ]] && return # if <5sec
         fi
-        echo -e "\a\e[7m$last_execution_time$last_execution_time_unit\e[0m\a"
+        # echo "$timer_show"
+        echo -e "\a\e[7m$timer_show$timer_show_unit\e[0m\a"
     }
+    trap 'timer_start' DEBUG
+    # preexec(){
+    #     last_execution_time=`date +%s`
+    # }
+    # preexec_invoke_exec(){
+    #     [ -n "$COMP_LINE" ] && return  # do nothing if completing
+    #     # echo "BASH_COMMAND= $BASH_COMMAND"
+    #     # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
+    #     [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
+    #     local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
+    #     preexec "$this_command"
+    # }
+    # trap 'preexec_invoke_exec' DEBUG
+    # last_execution_time_prompt_command(){
+    #     last_execution_time=$((`date +%s`-last_execution_time))
+    #     if [[ $last_execution_time -gt 60 ]];then
+    #         last_execution_time=$((last_execution_time/60))
+    #         last_execution_time_unit="m"
+    #     else
+    #         last_execution_time_unit="s"
+    #         [[ $last_execution_time -lt 5 ]] && return # if <5sec
+    #     fi
+    #     echo -e "\a\e[7m$last_execution_time$last_execution_time_unit\e[0m\a"
+    # }
 ## yoman related
     # run without colors by default
         function yo(){
@@ -462,7 +477,8 @@ if [[ -t 1 ]];then
             # Title bar
                 echo -ne "\033]0;$app$(gitps1) ${PWD}\007"
             # Last command execution time
-                last_execution_time_prompt_command
+                # last_execution_time_prompt_command
+                timer_stop
         }
         PROMPT_COMMAND='prompt_command'
 
