@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
-# curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.5b
+# curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
+version=0.6.6a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -10,100 +10,6 @@ function .v(){
 }
 # clear
 
-# Setting some Environment Variables
-    if [[ -z "$PORT" ]];then
-        export local='true'
-        export PORT='80'
-        export app=${PWD##*/}
-    fi
-    export env='dev'
-    if [[ -n "$C9_USER" ]];then
-        export remote='C9'
-    fi
-    if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
-        export remote='OS'
-        export OPENSHIFT='true'
-        export OPENSHIFT_HOME_DIR='app-root/data/'
-        export HOME=$HOME$OPENSHIFT_HOME_DIR
-        function logs(){
-            cd $OPENSHIFT_LOG_DIR
-        }
-        cd ~
-    fi
-    export winston='winston.log'
-    export CLOG='log verbose'
-    export CLOG='log verbose info'
-    export CLOG=''
-# Last command execution time
-    preexec(){
-        last_execution_time=`date +%s`
-    }
-    preexec_invoke_exec(){
-        [ -n "$COMP_LINE" ] && return  # do nothing if completing
-        # echo "BASH_COMMAND= $BASH_COMMAND"
-        # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
-        [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
-        local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
-        preexec "$this_command"
-    }
-    trap 'preexec_invoke_exec' DEBUG
-    last_execution_time_prompt_command(){
-        last_execution_time=$((`date +%s`-last_execution_time))
-        if [[ $last_execution_time -gt 60 ]];then
-            last_execution_time=$((last_execution_time/60))
-            last_execution_time_unit="m"
-        else
-            last_execution_time_unit="s"
-            if [[ $last_execution_time -lt 5 ]];then
-                return
-            fi
-        fi
-        echo -e "\a\e[7m$last_execution_time$last_execution_time_unit\e[0m\a"
-    }
-## Basic commands
-    # exit
-        function e(){
-            command exit
-        }
-    # directory
-        function d(){
-            command echo ${PWD}
-        }
-        function dir(){
-            command echo ${PWD}; ls -1Ahs --color=always
-        }
-    # disk usage; default
-        function du(){
-            d
-            if [[ -n "$@" ]];then
-                command du $@
-            else
-                sort -h /dev/null 2> /dev/null
-                if [[ $? -eq 0 ]];then
-                    command du -hs * | sort -hr | more
-                else
-                    if [[ -x more ]];then
-                        command du -s * | sort -nr | more
-                    else
-                        command du -s * | sort -n
-                    fi
-                fi
-            fi
-        }
-        function size(){
-            du
-        }
-    # ls
-        function ls(){
-            command ls -A $@
-        }
-    # remove
-        function rm(){
-            command rm -rf $@
-        }
-        function del(){
-            rm $@
-        }
 ## Git related
     # Pretty Git graph
         function gl(){
@@ -226,37 +132,16 @@ function .v(){
             sshg $@
         }
     # # git rewrite usernames in history
-    #     function gh(){
-    #         if [[ -n "$1" && -n "$2" ]];then
-    #             local from="$1"
-    #             local to="$2"
-    #             command git filter-branch --commit-filter 'if [ "$GIT_COMMITTER_NAME" = "x" ]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
-    #         fi
-    #     }
-## Meta (bash related)
-    # save <alias> <command> [argument(s)]
-        # Run a command and save it as alias in your local .bashrc
-        function save(){
-            eval "${@:2}"
-            if [[ $? -eq 0 ]]; then
-                str="alias $1='${@:2}'"
-                eval $str
-                echo -e "\n$str" >> ~/.bashrc
-                fi
-        }
-    # edit yourlocal .bashrc
-        function rc(){
-            if [[ "$1" == "v" ]];then
-                vim ~/.bashrc
-            else
-                command -v "C:\Program Files (x86)\Sublime Text 2\sublime_text.exe"
-                if [[ "$?" == 0 ]];then
-                    "C:\Program Files (x86)\Sublime Text 2\sublime_text.exe" ~/.bashrc
-                else
-                    vim ~/.bashrc
-                fi
-            fi
-        }
+        # function gh(){
+        #     if [[ -n "$1" && -n "$2" ]];then
+        #         local from="$1"
+        #         local to="$2"
+        #         command git filter-branch --commit-filter 'if [ "$GIT_COMMITTER_NAME" = "x" ]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
+        #     fi
+        # }
+
+if [[ -t 1 ]];then
+
 ## --no-color
     # grunt --no-color
         function grunt(){
@@ -308,6 +193,100 @@ function .v(){
         function s(){
             run $@
         }
+## Basic commands
+    # exit
+        function e(){
+            command exit
+        }
+    # directory
+        function d(){
+            command echo ${PWD}
+        }
+        function dir(){
+            command echo ${PWD}; ls -1Ahs --color=always
+        }
+    # disk usage; default
+        function du(){
+            d
+            if [[ -n "$@" ]];then
+                command du $@
+            else
+                sort -h /dev/null 2> /dev/null
+                if [[ $? -eq 0 ]];then
+                    command du -hs * | sort -hr | more
+                else
+                    if [[ -x more ]];then
+                        command du -s * | sort -nr | more
+                    else
+                        command du -s * | sort -n
+                    fi
+                fi
+            fi
+        }
+        function size(){
+            du
+        }
+    # ls
+        function ls(){
+            command ls -A $@
+        }
+    # remove
+        function rm(){
+            command rm -rf $@
+        }
+        function del(){
+            rm $@
+        }
+# Setting some Environment Variables
+    if [[ -z "$PORT" ]];then
+        export local='true'
+        export PORT='80'
+        export app=${PWD##*/}
+    fi
+    export env='dev'
+    if [[ -n "$C9_USER" ]];then
+        export remote='C9'
+    fi
+    if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
+        export remote='OS'
+        export OPENSHIFT='true'
+        export OPENSHIFT_HOME_DIR='app-root/data/'
+        export HOME=$HOME$OPENSHIFT_HOME_DIR
+        function logs(){
+            cd $OPENSHIFT_LOG_DIR
+        }
+        cd ~
+    fi
+    export winston='winston.log'
+    export CLOG='log verbose'
+    export CLOG='log verbose info'
+    export CLOG=''
+# Last command execution time
+    preexec(){
+        last_execution_time=`date +%s`
+    }
+    preexec_invoke_exec(){
+        [ -n "$COMP_LINE" ] && return  # do nothing if completing
+        # echo "BASH_COMMAND= $BASH_COMMAND"
+        # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
+        [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
+        local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
+        preexec "$this_command"
+    }
+    trap 'preexec_invoke_exec' DEBUG
+    last_execution_time_prompt_command(){
+        last_execution_time=$((`date +%s`-last_execution_time))
+        if [[ $last_execution_time -gt 60 ]];then
+            last_execution_time=$((last_execution_time/60))
+            last_execution_time_unit="m"
+        else
+            last_execution_time_unit="s"
+            if [[ $last_execution_time -lt 5 ]];then
+                return
+            fi
+        fi
+        echo -e "\a\e[7m$last_execution_time$last_execution_time_unit\e[0m\a"
+    }
 ## yoman related
     # run without colors by default
         function yo(){
@@ -386,59 +365,35 @@ function .v(){
     function osmongodump(){
         sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
     }
-## project related
-    # simpleapp
-        alias sm='clear ; rm -dfr ; yo --no-color simpleapp ; node simpleapp/server/app.js'
-    # itsmaidup
-        function delip(){
-            osmongoeval "db.logs.remove({ip:\\\"$1\\\"})"
-        }
-        function oslogsby(){
-            if [[ -n "$2" ]];then
-                oslogs f | grep "$1" | grep -v "$2"
-            else
-                oslogs f | grep "$1"
-            fi
-        }
-        function oslogscheck(){
-            oslogsby /logs? 122.162.62.132
-        }
-        # echo "delip x.x.x.x ……………… osmongoeval db.logs.remove({ip:\"x.x.x.x\"})"
-
-# # echo "┌  Handy shortcuts  ┐"
-#   echo "d[ir] …………………………………… echo \${PWD} [ls -1AhsS --color=always]"
-#   echo "gl …………………………………………… git log --graph ..."
-#   echo "cm msg ………………………………… git add -A && commit -m \"msg\""
-#   echo "run [update] [pkg] … [npm install [pkg] &&] npm start"
-#   echo "pull [gh/bb/os] ………… git pull -t [github/bitbucket/openshift] master"
-#   echo "push [f] [gh/bb/os]  git push [-f] --mirror [github/bitbucket/openshift]"
-#   echo "npm [...] ………………………… npm [[if .npmrc] --userconfig=.npmrc] [...]"
-#   echo "publish [msg] ……………… npm version patch && publish [msg]"
-#   echo "rhc [...] [app] ………… rhc [...] -a \$app"
-#   echo "oslogs ………………………………… rhc tail -f app-root/logs/nodejs.log \$app"
-#   echo "sshos [...] …………………… rhc ssh [...] \$app"
-#   echo "mongo [...] …………………… mongo [...] \$app"
-#   echo "mongodb ……………………………… mongod"
-#   echo "[os]mongoeval \"...\"  [sshos --command] mongo --eval \"...\""
 ## Run local .bashrc(s)
-    if [[ -n $local ]];then
-        if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
-            if [[ -f .bashrc ]];then
-                . .bashrc
-                cd $app 2> /dev/null
-                # if [[ -n $local ]];then
-                #   run
-                # fi
-            fi
-        fi
+    if [[ -f .bashrc ]];then
+        . .bashrc
     fi
-    if [[ -f ~/app.bashrc ]];then
-        . ~/app.bashrc
+    if [[ -f ../.bashrc ]];then
+        . ../.bashrc
     fi
+    if [[ -f $app/.bashrc ]];then
+        . $app/.bashrc
+    fi
+    cd $app 2> /dev/null
+    # if [[ -n $local ]];then
+    #     if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
+    #         if [[ -f .bashrc ]];then
+    #             . .bashrc
+    #             cd $app 2> /dev/null
+    #             # if [[ -n $local ]];then
+    #             #   run
+    #             # fi
+    #         fi
+    #     fi
+    # fi
+    # if [[ -f ~/app.bashrc ]];then
+    #     . ~/app.bashrc
+    # fi
 # Bash Display Settings
     # Prompt
         # check if git available
-            __git_ps1 > /dev/null 2>&1
+            __git_ps1 > /dev/null 2>&1 # (bottleneck 4s)
             if [[ $? -ne 0 ]]; then
                 function gitps1(){
                     echo " "
@@ -452,6 +407,7 @@ function .v(){
                     fi
                 }
             fi
+
         function PSremote(){
             if [[ -n "$remote" ]];then
                 echo -e "\e[7m$remote\e[0m "
@@ -500,6 +456,7 @@ function .v(){
         function ps1(){
             p
         }
+
     # Title
         function prompt_command(){
             # Title bar
@@ -508,5 +465,8 @@ function .v(){
                 last_execution_time_prompt_command
         }
         PROMPT_COMMAND='prompt_command'
+
+fi
+
 # ===================================================================================================================== #
 fi
