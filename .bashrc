@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.7a
+version=0.6.7b
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -284,8 +284,6 @@ if [[ -t 1 ]];then
     # }
     # preexec_invoke_exec(){
     #     [ -n "$COMP_LINE" ] && return  # do nothing if completing
-    #     # echo "BASH_COMMAND= $BASH_COMMAND"
-    #     # echo "PROMPT_COMMAND= $PROMPT_COMMAND"
     #     [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
     #     local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
     #     preexec "$this_command"
