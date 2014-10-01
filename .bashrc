@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.11a
+version=0.7.0a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -29,7 +29,7 @@ function .v(){
             fi
         }
         function gc(){
-            gm
+            gm $@
         }
     # git remote
         function remote(){
@@ -89,6 +89,11 @@ function .v(){
             fi
             command git push -f $remote $branch
             printf "\a\a\a\a"
+        }
+    # commit & push
+        function gcp(){
+            gc $@
+            push
         }
     # SSH Generate key
         function sshg(){
@@ -331,7 +336,7 @@ if [[ -t 1 ]];then
         fi
     }
     function mongoeval(){
-        mongo --eval $1
+        mongo --eval "$@"
         }
     function osmongoeval(){
         sshos "--command 'mongo --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD --eval \"$1\" $app'"
