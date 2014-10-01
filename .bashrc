@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.6.9a
+version=0.6.10a
 # echo $version
 if [[ -z "$bashrcloaded053a" ]];then
 export bashrcloaded053a='true'
@@ -319,7 +319,7 @@ if [[ -t 1 ]];then
     function mongo(){
         if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
             command mongo --host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD $@ $app
-        elif [[ "$remote" = "C9" ]]
+        elif [[ "$remote" = "C9" ]];then
             command mongo $@ data
         else
             command mongo $@ $app
