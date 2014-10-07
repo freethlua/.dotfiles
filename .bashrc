@@ -1,9 +1,9 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.0a
+version=0.7.2a
 # echo $version
-if [[ -z "$bashrcloaded053a" ]];then
+if [[ -z "$bashrcloaded072a" ]];then
 export bashrcloaded053a='true'
 function .v(){
     echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -437,7 +437,9 @@ if [[ -t 1 ]];then
             fi
         }
         function PSdir(){
-            if [[ "${PWD##*/}" == "$app" ]];then
+            if [[ "${PWD##*/}" == "" ]];then
+                echo -e "\e[0m/\e[0m"
+            elif [[ "${PWD##*/}" == "$app" ]];then
                 echo -e "\e[0m./\e[0m"
             else
                 echo -e "\e[0m…/${PWD##*/}\e[0m"

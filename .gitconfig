@@ -3,3 +3,6 @@
 	email = x
 [push]
 	default = matching
+[core]
+    autocrlf = input
+    safecrlf = false
