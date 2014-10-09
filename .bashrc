@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.2b
+version=0.7.3a
 # echo $version
 if [[ -z "$bashrcloaded072b" ]];then
 export bashrcloaded072b='true'
@@ -15,8 +15,12 @@ function .v(){
         function gl(){
             command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
-    # git gui and gitk
+    # git gui
         function gui(){
+            command git gui
+        }
+    # git gui and gitk
+        function guik(){
             command gitk & git gui
         }
     # commit auto
