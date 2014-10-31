@@ -148,6 +148,13 @@ function .v(){
         #         command git filter-branch --commit-filter 'if [ "$GIT_COMMITTER_NAME" = "x" ]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
         #     fi
         # }
+#notify
+    function notify {
+        nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
+        if [ "$?" -ne "0" ]; then
+            echo -e "\a\a"
+        fi
+    }
 
 if [[ -t 1 ]];then
 
@@ -388,8 +395,8 @@ if [[ -t 1 ]];then
             [[ $timer_show -lt 5 ]] && return # if <5sec
         fi
         # echo "$timer_show"
-        echo -e "\a\e[7m$timer_show$timer_show_unit\e[0m\a"
-        nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
+        echo -e "\e[7m$timer_show$timer_show_unit\e[0m"
+        notify
     }
     trap 'timer_start' DEBUG
     # preexec(){
