@@ -389,6 +389,7 @@ if [[ -t 1 ]];then
         fi
         # echo "$timer_show"
         echo -e "\a\e[7m$timer_show$timer_show_unit\e[0m\a"
+        nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
     }
     trap 'timer_start' DEBUG
     # preexec(){
