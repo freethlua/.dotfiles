@@ -9,7 +9,7 @@ function .v(){
     echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
 }
 # clear
-
+.v
 ## Git related
     # Pretty Git graph
         function gl(){
