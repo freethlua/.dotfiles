@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.4c
+version=0.7.5a
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -90,13 +90,18 @@ function .v(){
             if [[ -n "$2" ]];then
                 branch="$2"
             fi
-            command git push -f $remote $branch
+            command git push -f --thin $remote $branch
             printf "\a\a\a\a"
         }
     # commit & push
         function gcp(){
             gc $@
             push
+        }
+
+    # SSH
+        function ssh(){
+            command ssh $@ -v
         }
     # SSH Generate key
         function sshg(){
