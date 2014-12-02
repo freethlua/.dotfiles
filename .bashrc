@@ -46,6 +46,10 @@ function .v(){
         function status(){
             command git status $@
         }
+    # git checkout
+        function checkout(){
+            command git checkout $@
+        }
     # pull [gh/bb/os]
         function pull(){
             local remote="origin"
