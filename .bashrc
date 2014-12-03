@@ -50,6 +50,10 @@ function .v(){
         function checkout(){
             command git checkout $@
         }
+    # git checkout master
+        function master(){
+            checkout $@ master
+        }
     # pull [gh/bb/os]
         function pull(){
             local remote="origin"
@@ -108,7 +112,7 @@ function .v(){
             command ssh $@ -v
         }
     # SSH Generate key
-        function sshg(){
+        function sshkeygen(){
             command ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
             if [[ $? -eq 0 ]];then
             command mv $1_id_rsa* ~/.ssh
@@ -129,24 +133,6 @@ function .v(){
             command echo -e "git remote add github git@\e[7m$1.\e[0mgithub.com:$1/<project>.git"
             command echo -e "git remote add bitbucket git@\e[7m$1.\e[0mbitbucket.org:$1/<project>.git"
             fi
-        }
-        function sshk(){
-            sshg $@
-        }
-        function sshkg(){
-            sshg $@
-        }
-        function sshkeygen(){
-            sshg $@
-        }
-        function sshkgen(){
-            sshg $@
-        }
-        function sshkgn(){
-            sshg $@
-        }
-        function sshkn(){
-            sshg $@
         }
     # # git rewrite usernames in history
         # function gh(){
