@@ -34,6 +34,10 @@ function .v(){
         function gc(){
             gm $@
         }
+    # stash
+        function stash(){
+            command git stash $@
+        }
     # git remote
         function remote(){
             if [[ -z "$@" ]];then
