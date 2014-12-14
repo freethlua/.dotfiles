@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.8f
+version=0.7.8g
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -354,17 +354,16 @@ if [[ -t 1 ]];then
         else
             if [[ -z "$@" ]];then
                 command mongod
-            elif [[ "$@" =~ "-*" ]];then
+            elif [[ $@ == -* ]];then
                 command mongod $@
             else
-                if [[ "$1" == "*/" ]];then
-                    export $1=${1::-1}
+                if [[ $1 == */ ]];then
+                    set -- "${1::-1}"
                 fi
-                echo "command rm $1/mongod.lock"
-                echo "command mongod --bind_ip=$IP --dbpath=$1 --nojournal &"
+                command rm $1/mongod.lock
+                command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
             fi
         fi
-
     }
     function mongoeval(){
         mongo --eval "$@"
