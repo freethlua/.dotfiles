@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.8i
+version=0.7.8j
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -365,7 +365,7 @@ if [[ -t 1 ]];then
             else
                 if [[ -z "$@" ]];then
                     command mongod
-                elif [[ $@ == -* ]];then
+                elif [[ $@ == *-* ]];then
                     command mongod $@
                 else
                     if [[ $1 == */ ]];then
