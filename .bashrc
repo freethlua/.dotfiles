@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.8h
+version=0.7.8i
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -184,6 +184,10 @@ if [[ -t 1 ]];then
         }
         cd ~
     fi
+    parts > /dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        export remote='nitrous'
+    fi
     export winston='winston.log'
     export CLOG='log verbose'
     export CLOG='log verbose info'
@@ -352,16 +356,24 @@ if [[ -t 1 ]];then
         if [[ -n "$local" ]];then
             start C:\\localhost\\mongodb\\Run.BAT
         else
-            if [[ -z "$@" ]];then
-                command mongod
-            elif [[ $@ == -* ]];then
-                command mongod $@
-            else
-                if [[ $1 == */ ]];then
-                    set -- "${1::-1}"
+            if [[ "$remote" == "nitrous" ]];then
+                if [[ $@ == stop* ]];then
+                    command parts stop mongodb
+                else
+                    command parts start mongodb
                 fi
-                rm $1/mongod.lock
-                command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
+            else
+                if [[ -z "$@" ]];then
+                    command mongod
+                elif [[ $@ == -* ]];then
+                    command mongod $@
+                else
+                    if [[ $1 == */ ]];then
+                        set -- "${1::-1}"
+                    fi
+                    rm $1/mongod.lock
+                    command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
+                fi
             fi
         fi
     }
