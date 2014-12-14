@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.7a
+version=0.7.8a
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -160,6 +160,9 @@ function .v(){
 if [[ -t 1 ]];then
 
 # Setting some Environment Variables
+    if [[ -z "$IP" ]];then
+        export IP='0.0.0.0'
+    fi
     if [[ -z "$PORT" ]];then
         export local='true'
         export PORT='80'
@@ -167,9 +170,11 @@ if [[ -t 1 ]];then
     fi
     export env='dev'
     if [[ -n "$C9_USER" ]];then
+        export local=
         export remote='C9'
     fi
     if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
+        export local=
         export remote='OS'
         export OPENSHIFT='true'
         export OPENSHIFT_HOME_DIR='app-root/data/'
@@ -343,12 +348,21 @@ if [[ -t 1 ]];then
             command mongo $@ $app
         fi
     }
-    function mongodb(){
+    function mongod(){
         if [[ -n "$local" ]];then
             start C:\\localhost\\mongodb\\Run.BAT
         else
-            /home/ubuntu/mongod
+            if [[ "$@" == "-*" ]];then
+                command mongod $@
+            else
+                if [[ "$1" == "*/" ]];then
+                    export $1=${1::-1}
+                fi
+                echo command rm $1/mongod.lock
+                echo command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
+            fi
         fi
+
     }
     function mongoeval(){
         mongo --eval "$@"
@@ -499,10 +513,17 @@ if [[ -t 1 ]];then
         }
 
     # Title
+        function PCremote(){
+            if [[ -n "$remote" ]];then
+                echo -e " - $remote"
+            fi
+        }
         function prompt_command(){
             # Title bar
                 # echo -ne "\033]0;$app$(gitps1) [${PWD}] - sh\007"
-                echo -ne "\033]0;$app$(gitps1) - sh\007"
+                # echo -ne "\033]0;$app$(gitps1) - sh\007"
+                echo -ne "\033]0;$app$(gitps1)$(PCremote) - sh\007"
+
             # Last command execution time
                 # last_execution_time_prompt_command
                 timer_stop
