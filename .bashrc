@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.8a
+version=0.7.8b
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -164,7 +164,7 @@ if [[ -t 1 ]];then
         export IP='0.0.0.0'
     fi
     if [[ -z "$PORT" ]];then
-        export local='true'
+        export local='trueByPort'
         export PORT='80'
         export app=${PWD##*/}
     fi
