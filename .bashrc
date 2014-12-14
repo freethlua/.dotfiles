@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.6a
+version=0.7.7a
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -501,7 +501,8 @@ if [[ -t 1 ]];then
     # Title
         function prompt_command(){
             # Title bar
-                echo -ne "\033]0;$app$(gitps1) [${PWD}] - sh\007"
+                # echo -ne "\033]0;$app$(gitps1) [${PWD}] - sh\007"
+                echo -ne "\033]0;$app$(gitps1) - sh\007"
             # Last command execution time
                 # last_execution_time_prompt_command
                 timer_stop
