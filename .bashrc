@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.8g
+version=0.7.8h
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -360,7 +360,7 @@ if [[ -t 1 ]];then
                 if [[ $1 == */ ]];then
                     set -- "${1::-1}"
                 fi
-                command rm $1/mongod.lock
+                rm $1/mongod.lock
                 command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
             fi
         fi
