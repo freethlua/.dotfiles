@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.5a
+version=0.7.6a
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -14,6 +14,9 @@ function .v(){
         function gl(){
             command git log --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
         }
+        function log(){
+            gl
+        }
     # git gui
         function gui(){
             command git gui
@@ -23,16 +26,16 @@ function .v(){
             command gitk & git gui
         }
     # commit auto
-        function gm(){
+        function gc(){
             command git add -A
             if [[ -z "$@" ]];then
-                command git commit -m "."
+                command git commit -a -m "."
             else
-                command git commit -m "$@"
+                command git commit -a -m "$@"
             fi
         }
-        function gc(){
-            gm $@
+        function gm(){
+            gc $@
         }
     # stash
         function stash(){
@@ -190,7 +193,7 @@ if [[ -t 1 ]];then
             command echo ${PWD}
         }
         function dir(){
-            command echo ${PWD}; ls -1Ahs --color=always
+            ls -1Ash --color=always
         }
     # disk usage; default
         function du(){
@@ -209,13 +212,16 @@ if [[ -t 1 ]];then
                     fi
                 fi
             fi
+            d
         }
         function size(){
             du
         }
     # ls
         function ls(){
-            command ls -A $@
+            d
+            command ls -A --color=always $@
+            d
         }
     # remove
         function rm(){
@@ -393,7 +399,9 @@ if [[ -t 1 ]];then
             [[ $timer_show -lt 5 ]] && return # if <5sec
         fi
         # echo "$timer_show"
-        echo -e "\e[7m$timer_show$timer_show_unit\e[0m"
+        # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T (%d-%b-%Y)]')\e[0m"
+        # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T]')\e[0m"
+        echo -e "\e[7m$timer_show$timer_show_unit\e[0m \e[7m$(date +'%H:%M')\e[0m"
         notify
     }
     trap 'timer_start' DEBUG
@@ -450,7 +458,8 @@ if [[ -t 1 ]];then
             if [[ "${PWD##*/}" == "" ]];then
                 echo -e "\e[0m/\e[0m"
             elif [[ "${PWD##*/}" == "$app" ]];then
-                echo -e "\e[0m./\e[0m"
+                # echo -e "\e[0m./\e[0m"
+                echo -e "\b"
             else
                 echo -e "\e[0m…/${PWD##*/}\e[0m"
             fi
@@ -490,7 +499,7 @@ if [[ -t 1 ]];then
     # Title
         function prompt_command(){
             # Title bar
-                echo -ne "\033]0;$app$(gitps1) ${PWD}\007"
+                echo -ne "\033]0;$app$(gitps1) [${PWD}] - sh\007"
             # Last command execution time
                 # last_execution_time_prompt_command
                 timer_stop
