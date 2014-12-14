@@ -460,6 +460,8 @@ if [[ -t 1 ]];then
             elif [[ "${PWD##*/}" == "$app" ]];then
                 # echo -e "\e[0m./\e[0m"
                 echo -e "\b"
+            elif [[ "${PWD##*/}" == "workspace" ]];then
+                echo -e "\b"
             else
                 echo -e "\e[0m…/${PWD##*/}\e[0m"
             fi
