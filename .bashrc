@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.8b
+version=0.7.8c
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -160,21 +160,21 @@ function .v(){
 if [[ -t 1 ]];then
 
 # Setting some Environment Variables
+    if [[ -z "$app" ]];then
+        export app=${PWD##*/}
+    fi
     if [[ -z "$IP" ]];then
         export IP='0.0.0.0'
     fi
     if [[ -z "$PORT" ]];then
-        export local='trueByPort'
+        # export local='trueByPort'
         export PORT='80'
-        export app=${PWD##*/}
     fi
     export env='dev'
     if [[ -n "$C9_USER" ]];then
-        export local=
         export remote='C9'
     fi
     if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
-        export local=
         export remote='OS'
         export OPENSHIFT='true'
         export OPENSHIFT_HOME_DIR='app-root/data/'
