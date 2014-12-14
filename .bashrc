@@ -360,8 +360,8 @@ if [[ -t 1 ]];then
                 if [[ "$1" == "*/" ]];then
                     export $1=${1::-1}
                 fi
-                echo command rm $1/mongod.lock
-                echo command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
+                echo "command rm $1/mongod.lock"
+                echo "command mongod --bind_ip=$IP --dbpath=$1 --nojournal &"
             fi
         fi
 
