@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.9a
+version=0.7.10a
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -345,6 +345,34 @@ if [[ -t 1 ]];then
                 rhc tail -f app-root/logs/nodejs.log -a $app
             fi
         }
+## opsnshift related
+    if [[ "$remote" == "nitrous" ]];then
+        function mysql(){
+            if [[ $@ == stop* ]];then
+                command parts stop mysql
+            elif [[ $@ == start* ]];then
+                command parts stop mysql
+                command parts start mysql &
+            else
+                command mysql
+            fi
+        }
+        function apache2(){
+            if [[ $@ == stop* ]];then
+                command parts stop apache2
+            elif [[ $@ == start* ]];then
+                command parts stop apache2
+                command parts start apache2 &
+            else
+                command apache2
+            fi
+        }
+        function apache(){
+            apache2 $@
+        }
+        export httpd="~/.parts/etc/apache2/httpd.conf"
+        export php="~/.parts/etc/php5/php.ini"
+    fi
 ## mongoDB related
     function mongo(){
         if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
