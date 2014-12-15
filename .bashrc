@@ -1,7 +1,7 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.10a
+version=0.7.11a
 # echo $version $bashrcloaded073d
 # if [[ -z "$bashrcloaded073d" ]];then
 # export bashrcloaded073d='true'
@@ -57,6 +57,9 @@ function .v(){
     # git checkout
         function checkout(){
             command git checkout $@
+            if [[ $? -ne 0 ]]; then
+                command git checkout -b $@
+            fi
         }
     # git checkout master
         function master(){
