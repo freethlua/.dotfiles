@@ -2,16 +2,42 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 version=0.7.13g
-# if [[ "$dotfilesbashrcversion0713g" == "true" ]];then
-#     return
-# else
-#     dotfilesbashrcversion0713g="true"
-# fi
+if [[ "$dotfilesbashrcversion0713g" == "true" ]];then
+    exit 1
+else
+    dotfilesbashrcversion0713g="true"
+fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
     echo -e "\e[7m.v$version\e[0m"
 }
 # clear
+## Run local .bashrc(s)
+ if [[ -f .bashrc ]];then
+     . .bashrc
+ fi
+#    if [[ -f ../.bashrc ]];then
+#        . ../.bashrc
+#    fi
+#    if [[ -f $app/.bashrc ]];then
+#        . $app/.bashrc
+#    fi
+#    cd $app 2> /dev/null
+#    # if [[ -n $local ]];then
+#    #     if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
+#    #         if [[ -f .bashrc ]];then
+#    #             . .bashrc
+#    #             cd $app 2> /dev/null
+#    #             # if [[ -n $local ]];then
+#    #             #   run
+#    #             # fi
+#    #         fi
+#    #     fi
+#    # fi
+#    # if [[ -f ~/app.bashrc ]];then
+#    #     . ~/app.bashrc
+#    # fi
+
 ## Git related
     # Pretty Git graph
         function gl(){
@@ -421,34 +447,6 @@ if [[ -t 1 ]];then
     function osmongodump(){
         sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
     }
-
-
-
-## Run local .bashrc(s)
-#  if [[ -f .bashrc ]];then
-#      . .bashrc
-#  fi
-#    if [[ -f ../.bashrc ]];then
-#        . ../.bashrc
-#    fi
-#    if [[ -f $app/.bashrc ]];then
-#        . $app/.bashrc
-#    fi
-#    cd $app 2> /dev/null
-#    # if [[ -n $local ]];then
-#    #     if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
-#    #         if [[ -f .bashrc ]];then
-#    #             . .bashrc
-#    #             cd $app 2> /dev/null
-#    #             # if [[ -n $local ]];then
-#    #             #   run
-#    #             # fi
-#    #         fi
-#    #     fi
-#    # fi
-#    # if [[ -f ~/app.bashrc ]];then
-#    #     . ~/app.bashrc
-#    # fi
 
 # Last command execution time
     function timer_start {
