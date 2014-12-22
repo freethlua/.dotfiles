@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.13g
-if [[ "$dotfilesbashrcversion0713g" == "true" ]];then
+version=0.7.13h
+if [[ "$dotfilesbashrcversion0713h" == "true" ]];then
     exit 1
 else
-    dotfilesbashrcversion0713g="true"
+    dotfilesbashrcversion0713h="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -13,9 +13,9 @@ function .v(){
 }
 # clear
 ## Run local .bashrc(s)
- if [[ -f .bashrc ]];then
-     . .bashrc
- fi
+if [[ -f .bashrc ]];then
+    . .bashrc
+fi
 #    if [[ -f ../.bashrc ]];then
 #        . ../.bashrc
 #    fi
@@ -319,9 +319,9 @@ if [[ -t 1 ]];then
         function r(){
             run $@
         }
-        function s(){
-            run $@
-        }
+        # function s(){
+        #     run $@
+        # }
 ## yoman related
     # run without colors by default
         function yo(){
