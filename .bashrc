@@ -2,9 +2,12 @@
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
 version=0.7.12a
-# echo $version $bashrcloaded073d
-# if [[ -z "$bashrcloaded073d" ]];then
-# export bashrcloaded073d='true'
+if [[ "$dotfilesbashrcversion0712a" == "true" ]];then
+    return
+else
+    dotfilesbashrcversion0712a="true"
+fi
+echo $bashrcloaded073d
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
     echo -e "\e[7m.v$version\e[0m"
@@ -419,10 +422,13 @@ if [[ -t 1 ]];then
     function osmongodump(){
         sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
     }
-### Run local .bashrc(s)
-#    if [[ -f .bashrc ]];then
-#        . .bashrc
-#    fi
+
+
+
+## Run local .bashrc(s)
+   if [[ -f .bashrc ]];then
+       . .bashrc
+   fi
 #    if [[ -f ../.bashrc ]];then
 #        . ../.bashrc
 #    fi
@@ -444,6 +450,7 @@ if [[ -t 1 ]];then
 #    # if [[ -f ~/app.bashrc ]];then
 #    #     . ~/app.bashrc
 #    # fi
+
 # Last command execution time
     function timer_start {
         timer=${timer:-$SECONDS}
