@@ -1,12 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.13k
-if [[ "$dotfilesbashrcversion0713k" == "true" ]];then
-    # exit 1
+version=0.7.13l
+if [[ "$dotfilesbashrcversion0713l" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0713k="true"
+    dotfilesbashrcversion0713l="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
