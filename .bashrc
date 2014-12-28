@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.13l
-if [[ "$dotfilesbashrcversion0713l" == "true" ]];then
+version=0.7.14a
+if [[ "$dotfilesbashrcversion0714a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0713l="true"
+    dotfilesbashrcversion0714a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -423,6 +423,10 @@ if [[ -t 1 ]];then
                     command parts stop mongodb
                     command parts start mongodb &
                 fi
+            elif [[ "$remote" == "c9" ]];then
+                mkdir /home/ubuntu/data
+                rm /home/ubuntu/data/mongod.lock
+                command mongod --bind_ip=$IP --dbpath=/home/ubuntu/data --nojournal &
             else
                 if [[ -z "$@" ]];then
                     command mongod
