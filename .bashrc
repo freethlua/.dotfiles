@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.16a
-if [[ "$dotfilesbashrcversion0716a" == "true" ]];then
+version=0.7.17a
+if [[ "$dotfilesbashrcversion0717a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0716a="true"
+    dotfilesbashrcversion0717a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -359,31 +359,47 @@ if ! [[ -t 0 ]];then return; fi
                 rhc tail -f app-root/logs/nodejs.log -a $app
             fi
         }
-## opsnshift related
-    if [[ "$remote" == "nitrous" ]];then
-        function mysql(){
+## mysql apache related
+    function mysqld(){
+        if [[ "$remote" == "nitrous" ]];then
             if [[ $@ == stop* ]];then
                 command parts stop mysql
             elif [[ $@ == start* ]];then
                 command parts stop mysql
                 command parts start mysql &
             else
-                command mysql
+                command mysqld $@
             fi
-        }
-        function apache2(){
+        else
+            if [[ -n "$mysqlpassword" ]];then
+                local password="--password=$mysqlpassword"
+            fi
+            if [[ -n "$mysqluser" ]];then
+                local user="-u $mysqluser"
+            else
+                local user="-u root"
+            fi
+            command mysqld $user $password $@
+        fi
+    }
+    function apache2(){
+        if [[ "$remote" == "nitrous" ]];then
             if [[ $@ == stop* ]];then
                 command parts stop apache2
             elif [[ $@ == start* ]];then
                 command parts stop apache2
                 command parts start apache2 &
             else
-                command apache2
+                command apache2 $@
             fi
-        }
-        function apache(){
-            apache2 $@
-        }
+        fi
+
+    }
+    function apache(){
+        apache2 $@
+    }
+
+    if [[ "$remote" == "nitrous" ]];then
         export httpd="~/.parts/etc/apache2/httpd.conf"
         export php="~/.parts/etc/php5/php.ini"
     fi
