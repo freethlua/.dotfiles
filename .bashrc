@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.17d
-if [[ "$dotfilesbashrcversion0717d" == "true" ]];then
+version=0.7.18a
+if [[ "$dotfilesbashrcversion0718a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0717d="true"
+    dotfilesbashrcversion0718a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -13,9 +13,9 @@ function .v(){
 }
 # clear
 ## Run local .bashrc(s)
-if [[ -f .bashrc ]];then
-    . .bashrc
-fi
+    if [[ -f .bashrc ]];then
+        . .bashrc
+    fi
 
 ## Git related
     # Pretty Git graph
@@ -160,52 +160,57 @@ fi
         #         command git filter-branch --commit-filter 'if [ "$GIT_COMMITTER_NAME" = "x" ]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
         #     fi
         # }
-#notify
-    function notify {
-        nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
-        if [ "$?" -ne "0" ]; then
-            echo -e "\a\a"
-        fi
-    }
-
-# Proceed only if interactive terminal
-if ! [[ -t 0 ]];then return; fi
-
-
-# Setting some Environment Variables
-    if [[ -z "$app" ]];then
-        export app=${PWD##*/}
-    fi
-    if [[ -z "$IP" ]];then
-        export IP='0.0.0.0'
-    fi
-    if [[ -z "$PORT" ]];then
-        # export local='trueByPort'
-        export PORT='80'
-    fi
-    export env='dev'
-    if [[ -n "$C9_USER" ]];then
-        export remote='C9'
-    fi
-    if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
-        export remote='OS'
-        export OPENSHIFT='true'
-        export OPENSHIFT_HOME_DIR='app-root/data/'
-        export HOME=$HOME$OPENSHIFT_HOME_DIR
-        function logs(){
-            cd $OPENSHIFT_LOG_DIR
+##notify
+    #notify
+        function notify {
+            nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
+            if [ "$?" -ne "0" ]; then
+                echo -e "\a\a"
+            fi
         }
-        cd ~
-    fi
-    parts > /dev/null 2>&1
-    if [[ $? -eq 0 ]]; then
-        export remote='nitrous'
-    fi
-    export winston='winston.log'
-    export CLOG='log verbose'
-    export CLOG='log verbose info'
-    export CLOG=''
+
+
+
+## Proceed only if interactive terminal
+    if ! [[ -t 0 ]];then return; fi
+
+
+
+
 ## Basic commands
+    # Setting some Environment Variables
+        if [[ -z "$app" ]];then
+            export app=${PWD##*/}
+        fi
+        if [[ -z "$IP" ]];then
+            export IP='0.0.0.0'
+        fi
+        if [[ -z "$PORT" ]];then
+            # export local='trueByPort'
+            export PORT='80'
+        fi
+        export env='dev'
+        if [[ -n "$C9_USER" ]];then
+            export remote='C9'
+        fi
+        if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
+            export remote='OS'
+            export OPENSHIFT='true'
+            export OPENSHIFT_HOME_DIR='app-root/data/'
+            export HOME=$HOME$OPENSHIFT_HOME_DIR
+            function logs(){
+                cd $OPENSHIFT_LOG_DIR
+            }
+            cd ~
+        fi
+        parts > /dev/null 2>&1
+        if [[ $? -eq 0 ]]; then
+            export remote='nitrous'
+        fi
+        export winston='winston.log'
+        export CLOG='log verbose'
+        export CLOG='log verbose info'
+        export CLOG=''
     # exit
         function e(){
             command exit
@@ -253,6 +258,13 @@ if ! [[ -t 0 ]];then return; fi
         }
         function del(){
             rm $@
+        }
+    # cd
+        function cd..(){
+            command cd ..
+        }
+        function cd/(){
+            command cd /
         }
 ## --no-color
     # grunt --no-color
@@ -360,143 +372,127 @@ if ! [[ -t 0 ]];then return; fi
             fi
         }
 ## mysql apache related
-    function mysqld(){
-        if [[ "$remote" == "nitrous" ]];then
-            if [[ $@ == stop* ]];then
-                command parts stop mysql
-            elif [[ $@ == start* ]];then
-                command parts stop mysql
-                command parts start mysql &
+    #mysql
+        function mysqld(){
+            if [[ "$remote" == "nitrous" ]];then
+                if [[ $@ == stop* ]];then
+                    command parts stop mysql
+                elif [[ $@ == start* ]];then
+                    command parts stop mysql
+                    command parts start mysql &
+                else
+                    command mysqld $@
+                fi
             else
                 command mysqld $@
             fi
-        else
-            command mysqld $@
-        fi
-    }
-    function mysql(){
-        if [[ -n "$mysqlpassword" ]];then
-            local password="--password=$mysqlpassword"
-        fi
-        if [[ -n "$mysqluser" ]];then
-            local user="-u $mysqluser"
-        else
-            local user="-u root"
-        fi
-        command mysql $user $password $@
-    }
-    function apache2(){
-        if [[ "$remote" == "nitrous" ]];then
-            if [[ $@ == stop* ]];then
-                command parts stop apache2
-            elif [[ $@ == start* ]];then
-                command parts stop apache2
-                command parts start apache2 &
-            else
-                command apache2 $@
+        }
+        function mysql(){
+            if [[ -n "$mysqlpassword" ]];then
+                local password="--password=$mysqlpassword"
             fi
-        fi
-
-    }
-    function apache(){
-        apache2 $@
-    }
-
-    if [[ "$remote" == "nitrous" ]];then
-        export httpd="~/.parts/etc/apache2/httpd.conf"
-        export php="~/.parts/etc/php5/php.ini"
-    fi
-## mongoDB related
-    function mongo(){
-        if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
-            command mongo --host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD $@ $app
-        else
-            command mongo $@ $app
-        fi
-    }
-    function mongod(){
-        if [[ -n "$local" ]];then
-            start C:\\localhost\\mongodb\\Run.BAT
-        else
+            if [[ -n "$mysqluser" ]];then
+                local user="-u $mysqluser"
+            else
+                local user="-u root"
+            fi
+            command mysql $user $password $@
+        }
+    #apache
+        function apache2(){
             if [[ "$remote" == "nitrous" ]];then
                 if [[ $@ == stop* ]];then
-                    command parts stop mongodb
+                    command parts stop apache2
+                elif [[ $@ == start* ]];then
+                    command parts stop apache2
+                    command parts start apache2 &
                 else
-                    command parts stop mongodb
-                    command parts start mongodb &
-                fi
-            elif [[ "$remote" == "C9" ]];then
-                mkdir /home/ubuntu/data
-                rm /home/ubuntu/data/mongod.lock
-                command mongod --bind_ip=$IP --dbpath=/home/ubuntu/data --nojournal &
-            else
-                if [[ -z "$@" ]];then
-                    command mongod
-                elif [[ $@ == *-* ]];then
-                    command mongod $@
-                else
-                    if [[ $1 == */ ]];then
-                        set -- "${1::-1}"
-                    fi
-                    rm $1/mongod.lock
-                    command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
+                    command apache2 $@
                 fi
             fi
+        }
+        function apache(){
+            apache2 $@
+        }
+    #httpd.conf & php.ini
+        if [[ "$remote" == "nitrous" ]];then
+            export httpd="~/.parts/etc/apache2/httpd.conf"
+            export php="~/.parts/etc/php5/php.ini"
         fi
-    }
-    function mongoeval(){
-        mongo --eval "$@"
+## mongoDB related
+    #mongo
+        function mongo(){
+            if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
+                command mongo --host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD $@ $app
+            else
+                command mongo $@ $app
+            fi
         }
-    function osmongoeval(){
-        sshos "--command 'mongo --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD --eval \"$1\" $app'"
+    #mongod
+        function mongod(){
+            if [[ -n "$local" ]];then
+                start C:\\localhost\\mongodb\\Run.BAT
+            else
+                if [[ "$remote" == "nitrous" ]];then
+                    if [[ $@ == stop* ]];then
+                        command parts stop mongodb
+                    else
+                        command parts stop mongodb
+                        command parts start mongodb &
+                    fi
+                elif [[ "$remote" == "C9" ]];then
+                    mkdir /home/ubuntu/data
+                    rm /home/ubuntu/data/mongod.lock
+                    command mongod --bind_ip=$IP --dbpath=/home/ubuntu/data --nojournal &
+                else
+                    if [[ -z "$@" ]];then
+                        command mongod
+                    elif [[ $@ == *-* ]];then
+                        command mongod $@
+                    else
+                        if [[ $1 == */ ]];then
+                            set -- "${1::-1}"
+                        fi
+                        rm $1/mongod.lock
+                        command mongod --bind_ip=$IP --dbpath=$1 --nojournal &
+                    fi
+                fi
+            fi
         }
-    function osmongodump(){
-        sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
-    }
+    #mongo server
+        function mongoeval(){
+            mongo --eval "$@"
+            }
+        function osmongoeval(){
+            sshos "--command 'mongo --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD --eval \"$1\" $app'"
+            }
+        function osmongodump(){
+            sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
+        }
 
-# Last command execution time
-    function timer_start {
-        timer=${timer:-$SECONDS}
-    }
-    function timer_stop {
-        timer_show=$(($SECONDS - $timer))
-        unset timer
-        if [[ $timer_show -gt 60 ]];then
-            timer_show=$((timer_show/60))
-            timer_show_unit="m"
-        else
-            timer_show_unit="s"
-            [[ $timer_show -lt 5 ]] && return # if <5sec
-        fi
-        # echo "$timer_show"
-        # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T (%d-%b-%Y)]')\e[0m"
-        # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T]')\e[0m"
-        echo -e "\e[7m$timer_show$timer_show_unit\e[0m \e[7m$(date +'%H:%M')\e[0m"
-        notify
-    }
-    trap 'timer_start' DEBUG
-    # preexec(){
-    #     last_execution_time=`date +%s`
-    # }
-    # preexec_invoke_exec(){
-    #     [ -n "$COMP_LINE" ] && return  # do nothing if completing
-    #     [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
-    #     local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
-    #     preexec "$this_command"
-    # }
-    # trap 'preexec_invoke_exec' DEBUG
-    # last_execution_time_prompt_command(){
-    #     last_execution_time=$((`date +%s`-last_execution_time))
-    #     if [[ $last_execution_time -gt 60 ]];then
-    #         last_execution_time=$((last_execution_time/60))
-    #         last_execution_time_unit="m"
-    #     else
-    #         last_execution_time_unit="s"
-    #         [[ $last_execution_time -lt 5 ]] && return # if <5sec
-    #     fi
-    #     echo -e "\a\e[7m$last_execution_time$last_execution_time_unit\e[0m\a"
-    # }
-# Bash Display Settings
+## Last command execution time
+    #timer
+        function timer_start {
+            timer=${timer:-$SECONDS}
+        }
+        function timer_stop {
+            timer_show=$(($SECONDS - $timer))
+            unset timer
+            if [[ $timer_show -gt 60 ]];then
+                timer_show=$((timer_show/60))
+                timer_show_unit="m"
+            else
+                timer_show_unit="s"
+                [[ $timer_show -lt 5 ]] && return # if <5sec
+            fi
+            # echo "$timer_show"
+            # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T (%d-%b-%Y)]')\e[0m"
+            # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T]')\e[0m"
+            echo -e "\e[7m$timer_show$timer_show_unit\e[0m \e[7m$(date +'%H:%M')\e[0m"
+            notify
+        }
+        trap 'timer_start' DEBUG
+## Bash Display Settings
     # Prompt
         # check if git available
             __git_ps1 > /dev/null 2>&1 # (bottleneck 4s)
@@ -567,7 +563,6 @@ if ! [[ -t 0 ]];then return; fi
         function ps1(){
             p
         }
-
     # Title
         function PCremote(){
             if [[ -n "$remote" ]];then
