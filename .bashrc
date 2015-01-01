@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.18d
-if [[ "$dotfilesbashrcversion0718d" == "true" ]];then
+version=0.7.18f
+if [[ "$dotfilesbashrcversion0718f" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0718d="true"
+    dotfilesbashrcversion0718f="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -223,33 +223,30 @@ function .v(){
             ls -1Ash --color=always
         }
     # disk usage; default
-        function du(){
-            sort -h /dev/null > /dev/null 2>&1
+        sort -h /dev/null > /dev/null 2>&1
+        if [[ $? -eq 0 ]];then
+            duarg="-hs *"
+            dusortarg="| sort -hr"
+        else
+            duarg="-ks *"
+            command | xargs -d > /dev/null 2>&1
             if [[ $? -eq 0 ]];then
-                local duarg="-hs *"
-                local sortarg="| sort -hr"
+                dusortarg="| sort -nr | cut -f2 | xargs -d '\n' du -sh"
             else
-                local duarg="-ks *"
-                command | xargs -d > /dev/null 2>&1
-                if [[ $? -eq 0 ]];then
-                    local sortarg="| sort -nr | cut -f2 | xargs -d '\n' du -sh"
-                else
-                    local sortarg="| sort -nr"
-                fi
+                dusortarg="| sort -nr"
             fi
-
+        fi
+        if [[ -x more ]];then
+            dumorearg="| more"
+        fi
+        function du(){
             if [[ -n "$@" ]];then
-                local duarg="$@"
+                duarg="$@"
             fi
-
-            if [[ -x more ]];then
-                local morearg="| more"
-            fi
-
             d
-            # echo "command du $duarg $sortarg $morearg"
-            # command du $duarg $sortarg $morearg
-            eval $(echo command du "$duarg" "$sortarg" "$morearg")
+            # echo "command du $duarg $dusortarg $dumorearg"
+            # command du $duarg $dusortarg $dumorearg
+            eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
             d
         }
         function size(){
