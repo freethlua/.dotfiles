@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.20b
-if [[ "$dotfilesbashrcversion0720b" == "true" ]];then
+version=0.7.20c
+if [[ "$dotfilesbashrcversion0720c" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0720b="true"
+    dotfilesbashrcversion0720c="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -179,9 +179,9 @@ function .v(){
 
 ## Basic commands
     # Setting some Environment Variables
-        if [[ -z "$app" ]];then
-            export app=${PWD##*/}
-        fi
+        # if [[ -z "$app" ]];then
+        #     export app=${PWD##*/}
+        # fi
         if [[ -z "$IP" ]];then
             export IP='0.0.0.0'
         fi
