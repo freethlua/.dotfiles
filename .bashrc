@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.18a
-if [[ "$dotfilesbashrcversion0718a" == "true" ]];then
+version=0.7.18b
+if [[ "$dotfilesbashrcversion0718b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0718a="true"
+    dotfilesbashrcversion0718b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -224,23 +224,32 @@ function .v(){
         }
     # disk usage; default
         function du(){
-            d
-            if [[ -n "$@" ]];then
-                command du $@
+            sort -h /dev/null > /dev/null 2>&1
+            if [[ $? -eq 0 ]];then
+                local duarg="-hs *"
+                local sortarg="| sort -hr"
             else
-                sort -h /dev/null 2> /dev/null
+                local duarg="-ks *"
+                xargs -d /dev/null > /dev/null 2>&1
                 if [[ $? -eq 0 ]];then
-                    command du -hs * | sort -hr | more
+                    local sortarg="| sort -nr | cut -f2 | xargs -d '\n' du -sh"
                 else
-                    if [[ -x more ]];then
-                        # command du -s * | sort -nr | more
-                        command du -ks * | sort -nr | cut -f2 | xargs -d '\n' du -sh | more
-                    else
-                        # command du -s * | sort -n
-                        command du -ks * | sort -n | cut -f2 | xargs -d '\n' du -sh
-                    fi
+                    local sortarg="| sort -nr"
                 fi
             fi
+
+            if [[ -n "$@" ]];then
+                local duarg="$@"
+            fi
+
+            if [[ -x more ]];then
+                local morearg="| more"
+            fi
+
+            d
+            # echo "command du $duarg $sortarg $morearg"
+            # command du $duarg $sortarg $morearg
+            eval $(echo command du "$duarg" "$sortarg" "$morearg")
             d
         }
         function size(){
