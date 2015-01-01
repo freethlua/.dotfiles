@@ -243,7 +243,7 @@ function .v(){
             if [[ -n "$@" ]];then
                 command du $@
             else
-                echo "$duarg" "$dusortarg" "$dumorearg"
+                eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
             fi
         }
         function size(){
