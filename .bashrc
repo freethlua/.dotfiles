@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.18f
-if [[ "$dotfilesbashrcversion0718f" == "true" ]];then
+version=0.7.18g
+if [[ "$dotfilesbashrcversion0718g" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0718f="true"
+    dotfilesbashrcversion0718g="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -229,7 +229,7 @@ function .v(){
             dusortarg="| sort -hr"
         else
             duarg="-ks *"
-            command | xargs -d > /dev/null 2>&1
+            command | xargs -d '\n' > /dev/null 2>&1
             if [[ $? -eq 0 ]];then
                 dusortarg="| sort -nr | cut -f2 | xargs -d '\n' du -sh"
             else
@@ -240,13 +240,15 @@ function .v(){
             dumorearg="| more"
         fi
         function du(){
-            if [[ -n "$@" ]];then
-                duarg="$@"
-            fi
             d
+            if [[ -n "$@" ]];then
+                command du $@
+            else
+                eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
+            fi
             # echo "command du $duarg $dusortarg $dumorearg"
             # command du $duarg $dusortarg $dumorearg
-            eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
+            # eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
             d
         }
         function size(){
