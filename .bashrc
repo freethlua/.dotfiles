@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.20c
-if [[ "$dotfilesbashrcversion0720c" == "true" ]];then
+version=0.7.20d
+if [[ "$dotfilesbashrcversion0720d" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0720c="true"
+    dotfilesbashrcversion0720d="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -527,12 +527,12 @@ function .v(){
                 echo -e "\e[0m/\e[0m"
             elif [[ "${PWD}" == "$HOME" ]];then
                 echo -e "\e[0m~\e[0m"
+            elif [[ "${PWD##*/}" == "workspace" ]];then
+                echo -e "\b"
             elif [[ "${PWD}" == "$HOME/${PWD##*/}" ]];then
                 echo -e "\e[0m~/${PWD##*/}\e[0m"
             elif [[ "${PWD##*/}" == "$app" ]];then
                 # echo -e "\e[0m./\e[0m"
-                echo -e "\b"
-            elif [[ "${PWD##*/}" == "workspace" ]];then
                 echo -e "\b"
             elif [[ "${PWD}" == "/${PWD##*/}" ]];then
                 echo -e "\e[0m/${PWD##*/}\e[0m"
