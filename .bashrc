@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.15a
-if [[ "$dotfilesbashrcversion0715a" == "true" ]];then
+version=0.7.16a
+if [[ "$dotfilesbashrcversion0716a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0715a="true"
+    dotfilesbashrcversion0716a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -16,27 +16,6 @@ function .v(){
 if [[ -f .bashrc ]];then
     . .bashrc
 fi
-#    if [[ -f ../.bashrc ]];then
-#        . ../.bashrc
-#    fi
-#    if [[ -f $app/.bashrc ]];then
-#        . $app/.bashrc
-#    fi
-#    cd $app 2> /dev/null
-#    # if [[ -n $local ]];then
-#    #     if [[ "`echo ~`" != "`echo ${PWD}`" ]]; then
-#    #         if [[ -f .bashrc ]];then
-#    #             . .bashrc
-#    #             cd $app 2> /dev/null
-#    #             # if [[ -n $local ]];then
-#    #             #   run
-#    #             # fi
-#    #         fi
-#    #     fi
-#    # fi
-#    # if [[ -f ~/app.bashrc ]];then
-#    #     . ~/app.bashrc
-#    # fi
 
 ## Git related
     # Pretty Git graph
@@ -189,7 +168,9 @@ fi
         fi
     }
 
-if [[ -t 1 ]];then
+# Proceed only if interactive terminal
+if ! [[ -t 0 ]];then return; fi
+
 
 # Setting some Environment Variables
     if [[ -z "$app" ]];then
@@ -586,7 +567,6 @@ if [[ -t 1 ]];then
         }
         PROMPT_COMMAND='prompt_command'
 
-fi
 
 # ===================================================================================================================== #
 # fi
