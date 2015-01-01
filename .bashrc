@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.17a
-if [[ "$dotfilesbashrcversion0717a" == "true" ]];then
+version=0.7.17b
+if [[ "$dotfilesbashrcversion0717b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0717a="true"
+    dotfilesbashrcversion0717b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -371,16 +371,19 @@ if ! [[ -t 0 ]];then return; fi
                 command mysqld $@
             fi
         else
-            if [[ -n "$mysqlpassword" ]];then
-                local password="--password=$mysqlpassword"
-            fi
-            if [[ -n "$mysqluser" ]];then
-                local user="-u $mysqluser"
-            else
-                local user="-u root"
-            fi
-            command mysqld $user $password $@
+            command mysqld $@
         fi
+    }
+    function mysql(){
+        if [[ -n "$mysqlpassword" ]];then
+            local password="--password=$mysqlpassword"
+        fi
+        if [[ -n "$mysqluser" ]];then
+            local user="-u $mysqluser"
+        else
+            local user="-u root"
+        fi
+        echo "command mysql $user $password $@"
     }
     function apache2(){
         if [[ "$remote" == "nitrous" ]];then
