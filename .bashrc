@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.21b
-if [[ "$dotfilesbashrcversion0721b" == "true" ]];then
+version=0.7.22a
+if [[ "$dotfilesbashrcversion0722a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0721b="true"
+    dotfilesbashrcversion0722a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -225,7 +225,7 @@ function .v(){
     # disk usage; default
         sort -h /dev/null > /dev/null 2>&1
         if [[ $? -eq 0 ]];then
-            duarg="-hs *"
+            duarg="-hsc *"
             dusortarg="| sort -h"
         else
             duarg="-ks *"
