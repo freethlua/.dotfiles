@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.20d
-if [[ "$dotfilesbashrcversion0720d" == "true" ]];then
+version=0.7.21a
+if [[ "$dotfilesbashrcversion0721a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0720d="true"
+    dotfilesbashrcversion0721a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -385,20 +385,33 @@ function .v(){
                 else
                     command mysqld $@
                 fi
+            elif [[ "$remote" == "C9" ]];then
+                if [[ $@ == stop* ]];then
+                    mysql-ctl stop
+                elif [[ $@ == start* ]];then
+                    mysql-ctl stop
+                    mysql-ctl start &
+                else
+                    command mysqld $@
+                fi
             else
                 command mysqld $@
             fi
         }
         function mysql(){
-            if [[ -n "$mysqlpassword" ]];then
-                local password="--password=$mysqlpassword"
-            fi
-            if [[ -n "$mysqluser" ]];then
-                local user="-u $mysqluser"
+            if [[ "$remote" == "C9" ]];then
+                mysql-ctl cli
             else
-                local user="-u root"
+                if [[ -n "$mysqlpassword" ]];then
+                    local password="--password=$mysqlpassword"
+                fi
+                if [[ -n "$mysqluser" ]];then
+                    local user="-u $mysqluser"
+                else
+                    local user="-u root"
+                fi
+                command mysql $user $password $@
             fi
-            command mysql $user $password $@
         }
     #apache
         function apache2(){
