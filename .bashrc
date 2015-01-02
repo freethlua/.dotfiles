@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.21a
-if [[ "$dotfilesbashrcversion0721a" == "true" ]];then
+version=0.7.21b
+if [[ "$dotfilesbashrcversion0721b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0721a="true"
+    dotfilesbashrcversion0721b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -392,7 +392,7 @@ function .v(){
                     mysql-ctl stop
                     mysql-ctl start &
                 else
-                    command mysqld $@
+                    mysql-ctl $@
                 fi
             else
                 command mysqld $@
