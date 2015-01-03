@@ -391,18 +391,19 @@ function .v(){
         }
         function mysql(){
             if [[ "$remote" == "C9" ]];then
-                mysql-ctl cli
-            else
-                if [[ -n "$mysqlpassword" ]];then
-                    local password="--password=$mysqlpassword"
-                fi
-                if [[ -n "$mysqluser" ]];then
-                    local user="-u $mysqluser"
-                else
-                    local user="-u root"
-                fi
-                command mysql $user $password $@
+                # mysql-ctl cli
+                local user="-u $C9_USER"
+                local socket="-S /home/ubuntu/lib/mysql/socket/mysql.sock"
             fi
+            if [[ -n "$mysqlpassword" ]];then
+                local password="--password=$mysqlpassword"
+            fi
+            if [[ -n "$mysqluser" ]];then
+                local user="-u $mysqluser"
+            else
+                local user="-u root"
+            fi
+            command mysql $user $password $socket $@
         }
         function mysqldump(){
             if [[ -n "$mysqlpassword" ]];then
