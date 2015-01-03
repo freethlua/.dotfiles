@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.22c
-if [[ "$dotfilesbashrcversion0722c" == "true" ]];then
+version=0.7.24a
+if [[ "$dotfilesbashrcversion0724a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0722c="true"
+    dotfilesbashrcversion0724a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -179,9 +179,9 @@ function .v(){
 
 ## Basic commands
     # Setting some Environment Variables
-        # if [[ -z "$app" ]];then
-        #     export app=${PWD##*/}
-        # fi
+        if [[ -z "$app" ]];then
+            export app=${PWD##*/}
+        fi
         if [[ -z "$IP" ]];then
             export IP='0.0.0.0'
         fi
@@ -207,10 +207,6 @@ function .v(){
         if [[ $? -eq 0 ]]; then
             export remote='nitrous'
         fi
-        export winston='winston.log'
-        export CLOG='log verbose'
-        export CLOG='log verbose info'
-        export CLOG=''
     # exit
         function e(){
             command exit
@@ -406,6 +402,17 @@ function .v(){
                 fi
                 command mysql $user $password $@
             fi
+        }
+        function mysqldump(){
+            if [[ -n "$mysqlpassword" ]];then
+                local password="--password=$mysqlpassword"
+            fi
+            if [[ -n "$mysqluser" ]];then
+                local user="-u $mysqluser"
+            else
+                local user="-u root"
+            fi
+            command mysqldump $user $password $@
         }
     #apache
         function apache2(){
