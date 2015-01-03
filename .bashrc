@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.28a
-if [[ "$dotfilesbashrcversion0728a" == "true" ]];then
+version=0.7.28c
+if [[ "$dotfilesbashrcversion0728c" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0728a="true"
+    dotfilesbashrcversion0728c="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -417,7 +417,7 @@ function .v(){
             command mysqldump $user $password $@
         }
     #apache
-        function apache2(){
+        function apache(){
             if [[ "$remote" == "nitrous" ]];then
                 if [[ $@ == stop* ]];then
                     command parts stop apache2
@@ -425,14 +425,11 @@ function .v(){
                     command parts stop apache2
                     command parts start apache2 &
                 else
-                    command apache2 $@
+                    command apachectl $@
                 fi
             else
-                command apache2 $@
+                command apachectl $@
             fi
-        }
-        function apache(){
-            apache2 $@
         }
     #httpd.conf & php.ini
         if [[ "$remote" == "nitrous" ]];then
