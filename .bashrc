@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.28c
-if [[ "$dotfilesbashrcversion0728c" == "true" ]];then
+version=0.7.29a
+if [[ "$dotfilesbashrcversion0729a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0728c="true"
+    dotfilesbashrcversion0729a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -288,13 +288,16 @@ function .v(){
             fi
         }
     # publish after incrementing version (patch)
-        function pub(){
+        function publish(){
             if [[ -z "$@" ]]; then
                 npm version patch
             else
-                npm version patch -m $1
+                local msg="$@"
+                npm version patch -m "$msg"
             fi
             npm publish
+            gcp
+            notify
         }
 ## node app related
     # run through npm
