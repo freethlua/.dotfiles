@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.30a
-if [[ "$dotfilesbashrcversion0730a" == "true" ]];then
+version=0.7.31a
+if [[ "$dotfilesbashrcversion0731a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0730a="true"
+    dotfilesbashrcversion0731a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -48,7 +48,11 @@ function .v(){
         }
     # stash
         function stash(){
-            command git stash $@
+            local args=$@
+            if [[ $@ == s* ]];then
+                local args="save --keep-index"
+            fi
+            command git stash $args
         }
     # git remote
         function remote(){
@@ -62,6 +66,7 @@ function .v(){
         function status(){
             command git status $@
         }
+        alias st='status'
     # git checkout
         function checkout(){
             command git checkout $@
