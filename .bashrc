@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.32c
-if [[ "$dotfilesbashrcversion0732c" == "true" ]];then
+version=0.7.33a
+if [[ "$dotfilesbashrcversion0733a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0732c="true"
+    dotfilesbashrcversion0733a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -188,6 +188,27 @@ function .v(){
         }
 
 
+## npm related
+    # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
+        function npm(){
+            if [[ -f .npmrc ]];then
+                command npm --no-color --userconfig=.npmrc $@
+            else
+                command npm --no-color $@
+            fi
+        }
+    # publish after incrementing version (patch)
+        function publish(){
+            if [[ -z "$@" ]]; then
+                npm version patch
+            else
+                local msg="$@"
+                npm version patch -m "$msg"
+            fi
+            npm publish
+            gcp
+            notify
+        }
 
 ## Proceed only if interactive terminal
     if ! [[ -t 0 ]];then return; fi
@@ -276,6 +297,17 @@ function .v(){
         function cd/(){
             command cd /
         }
+    # screen
+        function screen(){
+            local args="$@"
+            if [[ $@ == kill* ]]; then
+                local args="-ls | grep Detached | cut -d. -f1 | awk '{print $1}' | xargs kill"
+            fi
+            if [[ $@ == ls* ]]; then
+                local args="-ls"
+            fi
+            eval $(echo command screen "$args")
+        }
 ## --no-color
     # grunt --no-color
         function grunt(){
@@ -294,27 +326,6 @@ function .v(){
         }
         function b(){
             bower $@
-        }
-## npm related
-    # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
-        function npm(){
-            if [[ -f .npmrc ]];then
-                command npm --no-color --userconfig=.npmrc $@
-            else
-                command npm --no-color $@
-            fi
-        }
-    # publish after incrementing version (patch)
-        function publish(){
-            if [[ -z "$@" ]]; then
-                npm version patch
-            else
-                local msg="$@"
-                npm version patch -m "$msg"
-            fi
-            npm publish
-            gcp
-            notify
         }
 ## node app related
     # run through npm
