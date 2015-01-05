@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.32b
-if [[ "$dotfilesbashrcversion0732b" == "true" ]];then
+version=0.7.32c
+if [[ "$dotfilesbashrcversion0732c" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0732b="true"
+    dotfilesbashrcversion0732c="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -75,6 +75,15 @@ function .v(){
                 command git clean -df
             fi
             command git checkout $args
+        }
+        alias ch='checkout'
+    # git add
+        function add(){
+            local args=$@
+            if [[ -z "$args" ]];then
+                local args="-i"
+            fi
+            command git add $args
         }
         alias ch='checkout'
     # git checkout master
