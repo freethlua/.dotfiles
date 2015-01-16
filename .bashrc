@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.35a
-if [[ "$dotfilesbashrcversion0735a" == "true" ]];then
+version=0.7.36a
+if [[ "$dotfilesbashrcversion0736a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0735a="true"
+    dotfilesbashrcversion0736a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -102,7 +102,7 @@ function .v(){
             if [[ $1 == "os" ]];then
                 remote="openshift"
             fi
-            local branch="master"
+            local branch="$(git rev-parse --symbolic-full-name HEAD)"
             if [[ $remote == "origin" ]];then
                 if [[ -n "$1" ]];then
                     branch="$1"
