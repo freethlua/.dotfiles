@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.33g
-if [[ "$dotfilesbashrcversion0733g" == "true" ]];then
+version=0.7.35a
+if [[ "$dotfilesbashrcversion0735a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0733g="true"
+    dotfilesbashrcversion0735a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -330,18 +330,18 @@ function .v(){
         }
 ## node app related
     # run through npm
-        function run(){
-            if [[ "$1" == "update" ]];then
-                npm install ${@:2}
-            fi
-            npm start
-        }
-        function r(){
-            run $@
-        }
-        # function s(){
+        # function run(){
+        #     if [[ "$1" == "update" ]];then
+        #         npm install ${@:2}
+        #     fi
+        #     npm start
+        # }
+        # function r(){
         #     run $@
         # }
+        # # function s(){
+        # #     run $@
+        # # }
 ## yoman related
     # run without colors by default
         function yo(){
@@ -544,20 +544,20 @@ function .v(){
 ## Bash Display Settings
     # Prompt
         # check if git available
-            __git_ps1 > /dev/null 2>&1 # (bottleneck 4s)
-            if [[ $? -ne 0 ]]; then
-                function gitps1(){
-                    echo " "
-                }
-            else
-                function gitps1(){
-                    if [[ "$(__git_ps1)" != " (master)" ]];then
-                        echo "$(__git_ps1) "
-                    else
-                        echo " "
-                    fi
-                }
+        function __git_ps1(){
+            local b="$(git symbolic-ref HEAD 2>/dev/null)";
+            if [ -n "$b" ]; then
+                printf " (%s)" "${b##refs/heads/}";
             fi
+        }
+        # modified gitps1
+        function gitps1(){
+            if [[ "$(__git_ps1)" != " (master)" ]];then
+                echo "$(__git_ps1) "
+            else
+                echo " "
+            fi
+        }
 
         function PSremote(){
             if [[ -n "$remote" ]];then
