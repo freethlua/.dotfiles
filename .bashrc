@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.36a
-if [[ "$dotfilesbashrcversion0736a" == "true" ]];then
+version=0.7.37a
+if [[ "$dotfilesbashrcversion0737a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0736a="true"
+    dotfilesbashrcversion0737a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -309,6 +309,10 @@ function .v(){
             fi
             command screen $args
         }
+        function sc(){
+            screen $@
+        }
+
 ## --no-color
     # grunt --no-color
         function grunt(){
@@ -518,6 +522,7 @@ function .v(){
         function osmongodump(){
             sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
         }
+
 
 ## Last command execution time
     #timer
