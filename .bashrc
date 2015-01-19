@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.42b
-if [[ "$dotfilesbashrcversion0742b" == "true" ]];then
+version=0.7.43b
+if [[ "$dotfilesbashrcversion0743b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0742b="true"
+    dotfilesbashrcversion0743b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -145,7 +145,7 @@ function .v(){
 
     # SSH
         function ssh(){
-            command ssh -v "$@"
+            command ssh "$@"
         }
     # SSH Generate key
         function sshkeygen(){
