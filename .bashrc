@@ -145,7 +145,8 @@ function .v(){
 
     # SSH
         function ssh(){
-            command ssh $@ -v
+            echo $@
+            command ssh -v "$@"
         }
     # SSH Generate key
         function sshkeygen(){
