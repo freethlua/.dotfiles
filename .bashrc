@@ -1,11 +1,11 @@
 # .dotfiles | .bashrc
 # execute like so:
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.37a
-if [[ "$dotfilesbashrcversion0737a" == "true" ]];then
+version=0.7.40a
+if [[ "$dotfilesbashrcversion0740a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0737a="true"
+    dotfilesbashrcversion0740a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -145,7 +145,6 @@ function .v(){
 
     # SSH
         function ssh(){
-            echo $@
             command ssh -v "$@"
         }
     # SSH Generate key
@@ -476,11 +475,15 @@ function .v(){
 ## mongoDB related
     #mongo
         function mongo(){
-            if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
-                command mongo --host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD $@ $app
+            if [[ $@ =~ [\(\)]+ ]]; then
+                local commands="--eval \"$@\""
             else
-                command mongo $@ $app
+                local args="$@"
             fi
+            if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
+                local auth="--host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD"
+            fi
+            eval "command mongo $args $commands $app"
         }
     #mongod
         function mongod(){
@@ -513,17 +516,6 @@ function .v(){
                 fi
             fi
         }
-    #mongo server
-        function mongoeval(){
-            mongo --eval "$@"
-            }
-        function osmongoeval(){
-            sshos "--command 'mongo --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD --eval \"$1\" $app'"
-            }
-        function osmongodump(){
-            sshos "--command 'mongodump --out ~/app-root/data/dump --host \$OPENSHIFT_MONGODB_DB_HOST --port \$OPENSHIFT_MONGODB_DB_PORT -u \$OPENSHIFT_MONGODB_DB_USERNAME -p \$OPENSHIFT_MONGODB_DB_PASSWORD'"
-        }
-
 
 ## Last command execution time
     #timer
