@@ -2,11 +2,11 @@
 # put in your .bashrc like so:
 # source <(curl -s https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc)
 
-version=0.7.44b
-if [[ "$dotfilesbashrcversion0744b" == "true" ]];then
+version=0.7.45a
+if [[ "$dotfilesbashrcversion0745a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0744b="true"
+    dotfilesbashrcversion0745a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -273,7 +273,8 @@ function .v(){
             if [[ -n "$@" ]];then
                 command du $@
             else
-                eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
+                # eval $(echo command du "$duarg" "$dusortarg" "$dumorearg")
+                eval "command du $duarg $dusortarg $dumorearg"
             fi
         }
         function size(){
