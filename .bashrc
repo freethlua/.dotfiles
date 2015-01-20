@@ -1,11 +1,12 @@
 # .dotfiles | .bashrc
-# execute like so:
-# curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
-version=0.7.43b
-if [[ "$dotfilesbashrcversion0743b" == "true" ]];then
+# put in your .bashrc like so:
+# source <(curl -s https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc)
+
+version=0.7.44a
+if [[ "$dotfilesbashrcversion0744a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0743b="true"
+    dotfilesbashrcversion0744a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -299,19 +300,19 @@ function .v(){
         }
     # screen
         function screen(){
-            local args="$@"
-            if [[ $@ == kill* ]]; then
-                command screen -ls | grep Detached | cut -d. -f1 | awk '{print $1}' | xargs kill
-                return
-            fi
-            if [[ $@ == l* ]]; then
+            if [[ $@ == *-* ]]; then
+                local args="$@"
+            elif [[ -n "$@" ]]; then
+                local args="-r $@"
+            elif [[ -z "$@" ]]; then
                 local args="-ls"
+            else
+                local args="$@"
             fi
-            command screen $args
+            eval "command screen $args"
         }
-        function sc(){
-            screen $@
-        }
+        function scr(){ screen $@; }
+        function sc(){ scr $@; }
 
 ## --no-color
     # grunt --no-color
