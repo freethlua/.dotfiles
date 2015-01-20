@@ -2,11 +2,11 @@
 # put in your .bashrc like so:
 # source <(curl -s https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc)
 
-version=0.7.44a
-if [[ "$dotfilesbashrcversion0744a" == "true" ]];then
+version=0.7.44b
+if [[ "$dotfilesbashrcversion0744b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0744a="true"
+    dotfilesbashrcversion0744b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -304,12 +304,18 @@ function .v(){
                 local args="$@"
             elif [[ -n "$@" ]]; then
                 local args="-r $@"
+                local backupargs="-S $@"
             elif [[ -z "$@" ]]; then
                 local args="-ls"
             else
                 local args="$@"
             fi
+
             eval "command screen $args"
+
+            if [[ $? -ne 0 && -n $backupargs ]]; then
+                eval "command screen $backupargs"
+            fi
         }
         function scr(){ screen $@; }
         function sc(){ scr $@; }
