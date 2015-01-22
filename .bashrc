@@ -3,6 +3,8 @@
 # source <(curl -s https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc)
 # or
 # curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
+# or
+# if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
 version=0.7.46a
 if [[ "$dotfilesbashrcversion0746a" == "true" ]];then
@@ -148,8 +150,17 @@ function .v(){
 
     # SSH
         function ssh(){
-            command ssh "$@"
+            if [[ -n $2 && ! $2 == *-* ]]; then
+                local command="echo \"${@:2}\" | command ssh $1"
+            else
+                local command="command ssh $@"
+            fi
+            # echo "$command"
+            eval "$command"
         }
+        # function ssh(){
+        #     command ssh "$@"
+        # }
     # SSH Generate key
         function sshkeygen(){
             command ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
