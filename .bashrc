@@ -6,11 +6,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.7.48a
-if [[ "$dotfilesbashrcversion0748a" == "true" ]];then
+version=0.7.49a
+if [[ "$dotfilesbashrcversion0749a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0748a="true"
+    dotfilesbashrcversion0749a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -653,7 +653,7 @@ function .v(){
             # Title bar
                 # echo -ne "\033]0;$app$(gitps1) [${PWD}] - sh\007"
                 # echo -ne "\033]0;$app$(gitps1) - sh\007"
-                echo -ne "\033]0;$app$(gitps1)$remote - sh\007"
+                echo -ne "\033]0;$app$(gitps1)$remote$task - sh\007"
 
             # Last command execution time
                 # last_execution_time_prompt_command
