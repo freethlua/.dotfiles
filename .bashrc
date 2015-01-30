@@ -293,6 +293,9 @@ function .v(){
         function size(){
             du
         }
+        function df(){
+            command df -h $@
+        }
     # ls
         function ls(){
             command ls -A --color=always $@
@@ -539,6 +542,7 @@ function .v(){
                 fi
             fi
         }
+
 
 ## Last command execution time
     #timer
