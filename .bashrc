@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.7.50c
-if [[ "$dotfilesbashrcversion0750c" == "true" ]];then
+version=0.7.50d
+if [[ "$dotfilesbashrcversion0750d" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0750c="true"
+    dotfilesbashrcversion0750d="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -561,7 +561,7 @@ function .v(){
         first_time="true"
         function timer_start {
             timer=${timer:-$SECONDS}
-            echo -ne "\033]0;$app $remote - \$ $(last_command)\007"
+            echo -ne "\033]0;$app $remote \$ $(last_command)\007"
         }
         function timer_stop {
             timer_show=$(($SECONDS - $timer))
@@ -669,7 +669,7 @@ function .v(){
                 # echo -ne "\033]0;$app$(gitps1) - sh\007"
                 # echo -ne "\033]0;$app$(gitps1)$remote - sh\007"
                 # echo -ne "\033]0;$app$(gitps1)$remote - sh [$(fc -nl 0)]\007"
-                echo -ne "\033]0;$app$(gitps1)$remote - \$ $(last_command)\007"
+                echo -ne "\033]0;$app$(gitps1)$remote \$ $(last_command)\007"
 
 
             # Last command execution time
