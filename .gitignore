@@ -1,5 +1,9 @@
-﻿node_modules
-*.log
+﻿*.bashrc
 *.CMD
+*.lnk
+*.log
+*.npmrc
+*.npmignore
 *.sublime*
-!.sublime-project
+node_modules
+bower_modules

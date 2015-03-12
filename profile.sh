@@ -1,3 +1,4 @@
+#!/bin/bash
 # .dotfiles | .bashrc
 # put in your .bashrc like so:
 # source <(curl -s https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc)
@@ -205,11 +206,16 @@ function .v(){
 ## npm related
     # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
         function npm(){
+            local args="--no-color"
             if [[ -f .npmrc ]];then
-                command npm --no-color --userconfig=.npmrc $@
-            else
-                command npm --no-color $@
+                local userconfig="--userconfig=.npmrc"
+            elif [[ -f ._npmrc ]];then
+                local userconfig="--userconfig=._npmrc"
+            elif [[ -f npmrc ]];then
+                local userconfig="--userconfig=npmrc"
             fi
+            local globalignorefile="--globalignorefile=~/.gitignore"
+            eval "command npm $userconfig $globalignorefile $args $@"
         }
     # publish after incrementing version (patch)
         function publish(){
@@ -545,9 +551,22 @@ function .v(){
 
 
 ## Last command execution time
+    #Last command
+        function last_command(){
+            local last_command="$(history 1)"
+            last_command=${last_command:7}
+            echo "$last_command"
+        }
     #timer
+        first_time="true"
         function timer_start {
             timer=${timer:-$SECONDS}
+            echo -ne "\033]0;$app$remote - sh ($(last_command))\007"
+            # if [[ "$first_time" == "true" ]];then
+            #     first_time="false"
+            # else
+            #     echo -ne "\033]0;$app$remote - sh ($(last_command))\007"
+            # fi
         }
         function timer_stop {
             timer_show=$(($SECONDS - $timer))
@@ -653,7 +672,10 @@ function .v(){
             # Title bar
                 # echo -ne "\033]0;$app$(gitps1) [${PWD}] - sh\007"
                 # echo -ne "\033]0;$app$(gitps1) - sh\007"
-                echo -ne "\033]0;$app$(gitps1)$remote - sh\007"
+                # echo -ne "\033]0;$app$(gitps1)$remote - sh\007"
+                # echo -ne "\033]0;$app$(gitps1)$remote - sh [$(fc -nl 0)]\007"
+                echo -ne "\033]0;$app$(gitps1)$remote - sh ($(last_command))\007"
+
 
             # Last command execution time
                 # last_execution_time_prompt_command
