@@ -272,6 +272,7 @@ function .v(){
             export remote='C9'
         fi
         if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
+            export app='$OPENSHIFT_APP_NAME'
             export remote='OS'
             export OPENSHIFT='true'
             export OPENSHIFT_HOME_DIR='app-root/data/'
