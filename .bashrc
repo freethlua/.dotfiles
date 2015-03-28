@@ -72,7 +72,7 @@ function .v(){
         function status(){
             command git status $@
         }
-        alias st='status'
+        alias st="status"
     # git checkout
         function checkout(){
             local args=$@
@@ -82,7 +82,7 @@ function .v(){
             fi
             command git checkout $args
         }
-        alias ch='checkout'
+        alias ch="checkout"
     # git add
         function add(){
             local args=$@
@@ -91,7 +91,7 @@ function .v(){
             fi
             command git add $args
         }
-        alias ch='checkout'
+        alias ch="checkout"
     # git checkout master
         function master(){
             checkout $@ master
@@ -159,7 +159,7 @@ function .v(){
                 local project_name=$@
             fi
             shift
-            command ssh-keygen -f $(echo $project_name)_id_rsa -t rsa -q -N '' -C $project_name
+            command ssh-keygen -f $(echo $project_name)_id_rsa -t rsa -q -N "" -C $project_name
             if [[ ! $? -eq 0 ]];then return; fi
             command mv $(echo $project_name)_id_rsa* ~/.ssh
             command echo "" >> ~/.ssh/config
@@ -207,8 +207,8 @@ function .v(){
             command node $@
         else
             command node . $@
-            read -rsp $'Press enter to continue...\n'
-            # read -rsp $'Press escape to continue...\n' -d $'\e'
+            read -rsp $"Press enter to continue...\n"
+            # read -rsp $"Press escape to continue...\n" -d $"\e"
             clear
             node $@
         fi
@@ -232,7 +232,7 @@ function .v(){
             local whoami="$(npm whoami)"
             echo You are $whoami
             if [[ $whoami == *"Not authed"* ]]; then return; fi
-            read -rsp $'Press Enter to Publish\n'
+            read -rsp $"Press Enter to Publish\n"
             echo Upping patch version...
             if [[ -z "$@" ]]; then
                 npm version patch
@@ -261,21 +261,21 @@ function .v(){
             export app=${PWD##*/}
         fi
         if [[ -z "$IP" ]];then
-            export IP='0.0.0.0'
+            export IP="0.0.0.0"
         fi
         if [[ -z "$PORT" ]];then
-            # export local='trueByPort'
-            export PORT='80'
+            # export local="trueByPort"
+            export PORT="80"
         fi
-        export env='dev'
+        export env="dev"
         if [[ -n "$C9_USER" ]];then
-            export remote='C9'
+            export remote="C9"
         fi
         if [[ -n "$OPENSHIFT_LOG_DIR" ]];then
-            export app='$OPENSHIFT_APP_NAME'
-            export remote='OS'
-            export OPENSHIFT='true'
-            export OPENSHIFT_HOME_DIR='app-root/data/'
+            export app="$OPENSHIFT_APP_NAME"
+            export remote="OS"
+            export OPENSHIFT="true"
+            export OPENSHIFT_HOME_DIR="app-root/data/"
             export HOME=$HOME$OPENSHIFT_HOME_DIR
             function logs(){
                 cd $OPENSHIFT_LOG_DIR
@@ -284,7 +284,7 @@ function .v(){
         fi
         parts > /dev/null 2>&1
         if [[ $? -eq 0 ]]; then
-            export remote='nitrous'
+            export remote="nitrous"
         fi
     # exit
         function e(){
@@ -408,10 +408,10 @@ function .v(){
         }
 ## opsnshift related
     # ! Store your appname, username, password, maybe token in your local .bashrc
-        # export app='appname'
-        # export osu='username'
-        # export osp='password'
-        # export ost='token_-_-_-_-_-_-_-...'
+        # export app="appname"
+        # export osu="username"
+        # export osp="password"
+        # export ost="token_-_-_-_-_-_-_-..."
         # set password at runtime (if you don't wanna store it in your local .bashrc)
             function osp(){
                 export osp=$@
@@ -599,7 +599,7 @@ function .v(){
             echo -e "\e[7m$timer_show$timer_show_unit\e[0m \e[7m$(date +'%H:%M')\e[0m"
             notify
         }
-        trap 'timer_start' DEBUG
+        trap "timer_start" DEBUG
 ## Bash Display Settings
     # Prompt
         # check if git available
@@ -654,7 +654,7 @@ function .v(){
         }
 
         function p(){
-            PS1='$(PSremote)$(PSappname)$(PSdir)$(PSgit)$(PSpromptsymbol)'
+            PS1="$(PSremote)$(PSappname)$(PSdir)$(PSgit)$(PSpromptsymbol)"
             # PS1='$(if [[ -n "$remote" ]];then echo -e "\e[7m$remote\e[0m ";fi)$(if [[ -n "$app" ]];then echo -e "\e[7m$app\e[0m ";fi)…/${PWD##*/}$(gitps1)\e[7m$\e[0m '
             # http://google.com/search?q=bash+prompt+right+align+???
             # PS1='\e[7m$remote\e[0m \e[7m$app\e[0m …/${PWD##*/}$(if [[ "$(__git_ps1)" != " (master)" ]];then echo "$(__git_ps1)"; fi) \e[7m$\e[0m '
@@ -696,7 +696,7 @@ function .v(){
                 # last_execution_time_prompt_command
                 timer_stop
         }
-        PROMPT_COMMAND='prompt_command'
+        PROMPT_COMMAND="prompt_command"
 
 
 # ===================================================================================================================== #
