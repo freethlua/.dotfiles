@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.7.50d
-if [[ "$dotfilesbashrcversion0750d" == "true" ]];then
+version=0.8.00a
+if [[ "$dotfilesbashrcversion0800a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0750d="true"
+    dotfilesbashrcversion0800a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -122,26 +122,12 @@ function .v(){
     # push [gh/bb/os]
         function push(){
             local remote="origin"
-            if [[ $1 == "gh" ]];then
-                remote="github"
-            fi
-            if [[ $1 == "bb" ]];then
-                remote="bitbucket"
-            fi
-            if [[ $1 == "os" ]];then
-                remote="openshift"
-            fi
-            local branch="--mirror"
-            if [[ $remote == "origin" ]];then
-                if [[ -n "$1" ]];then
-                    branch="$1"
-                fi
-            fi
-            if [[ -n "$2" ]];then
-                branch="$2"
-            fi
+            local branch="master"
+            if [[ -n "$1" ]];then local remote="$1"; fi
+            if [[ -n "$2" ]];then local branch="$2"; fi
+            echo Pushing to:\"$remote\" branch:\"$branch\"
             command git push -f --thin $remote $branch
-            printf "\a\a\a\a"
+            printf "\a\a\a\a\n"
         }
     # commit & push
         function gcp(){
@@ -163,27 +149,38 @@ function .v(){
         #     command ssh "$@"
         # }
     # SSH Generate key
-        function sshkeygen(){
-            command ssh-keygen -f $1_id_rsa -t rsa -C $@ -q -N ''
-            if [[ $? -eq 0 ]];then
-            command mv $1_id_rsa* ~/.ssh
-            command echo "" >> ~/.ssh/config
-            command echo "## $1" >> ~/.ssh/config
-            command echo "    # github" >> ~/.ssh/config
-            command echo "        Host           $1.github.com" >> ~/.ssh/config
-            command echo "        Hostname       github.com" >> ~/.ssh/config
-            command echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
-            command echo "    # bitbucket" >> ~/.ssh/config
-            command echo "        Host           $1.bitbucket.org" >> ~/.ssh/config
-            command echo "        Hostname       bitbucket.org" >> ~/.ssh/config
-            command echo "        IdentityFile   ~/.ssh/$1_id_rsa" >> ~/.ssh/config
-            command echo "" >> ~/.ssh/config
-            command cat ~/.ssh/$1_id_rsa.pub > /dev/clipboard
-            command echo -e "Copied to clipboard : ~/.ssh/$1_id_rsa.pub : $(cat ~/.ssh/$1_id_rsa.pub)"
-            command echo "Updated ~/.ssh/config to use URLs like this..."
-            command echo -e "git remote add github git@\e[7m$1.\e[0mgithub.com:$1/<project>.git"
-            command echo -e "git remote add bitbucket git@\e[7m$1.\e[0mbitbucket.org:$1/<project>.git"
+        function sshkey(){
+            echo Creating SSH Key
+            # sshkeygen your-name
+            if [[ -z "$@" ]];then
+                printf " Usage: $ sshkey enter_your_project_name "
+                read project_name
+            else
+                local project_name=$@
             fi
+            shift
+            command ssh-keygen -f $(echo $project_name)_id_rsa -t rsa -q -N '' -C $project_name
+            if [[ ! $? -eq 0 ]];then return; fi
+            command mv $(echo $project_name)_id_rsa* ~/.ssh
+            command echo "" >> ~/.ssh/config
+            command echo "## $(echo $project_name)" >> ~/.ssh/config
+            command echo "    # github" >> ~/.ssh/config
+            command echo "        Host           $(echo $project_name).github.com" >> ~/.ssh/config
+            command echo "        Hostname       github.com" >> ~/.ssh/config
+            command echo "        IdentityFile   ~/.ssh/$(echo $project_name)_id_rsa" >> ~/.ssh/config
+            command echo "    # bitbucket" >> ~/.ssh/config
+            command echo "        Host           $(echo $project_name).bitbucket.org" >> ~/.ssh/config
+            command echo "        Hostname       bitbucket.org" >> ~/.ssh/config
+            command echo "        IdentityFile   ~/.ssh/$(echo $project_name)_id_rsa" >> ~/.ssh/config
+            command echo "" >> ~/.ssh/config
+            echo " Done!"
+            echo " ~/.ssh/$(echo $project_name)_id_rsa.pub"
+            command cat ~/.ssh/$(echo $project_name)_id_rsa.pub > /dev/clipboard
+            command cat ~/.ssh/$(echo $project_name)_id_rsa.pub
+            command echo " Copied to clipboard"
+            command echo " Updated ~/.ssh/config, now you can use URLs like this..."
+            command echo -e "  $ git remote add github git@\e[7m$(echo $project_name).\e[0mgithub.com:$(echo $project_name)/<project>.git"
+            command echo -e "  $ git remote add bitbucket git@\e[7m$(echo $project_name).\e[0mbitbucket.org:$(echo $project_name)/<project>.git"
         }
     # # git rewrite usernames in history
         # function gh(){
@@ -203,6 +200,19 @@ function .v(){
         }
 
 
+## node related
+    # node .
+    function node(){
+        if [ ! -f ./index.js ]; then
+            command node $@
+        else
+            command node . $@
+            read -rsp $'Press enter to continue...\n'
+            # read -rsp $'Press escape to continue...\n' -d $'\e'
+            clear
+            node $@
+        fi
+    }
 ## npm related
     # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
         function npm(){
@@ -219,16 +229,25 @@ function .v(){
         }
     # publish after incrementing version (patch)
         function publish(){
+            local whoami="$(npm whoami)"
+            echo You are $whoami
+            if [[ $whoami == *"Not authed"* ]]; then return; fi
+            read -rsp $'Press Enter to Publish\n'
+            echo Upping patch version...
             if [[ -z "$@" ]]; then
                 npm version patch
             else
                 local msg="$@"
                 npm version patch -m "$msg"
             fi
+            echo Publishing...
             npm publish
+            echo Git Pushing...
             gcp
+            echo Done
             notify
         }
+
 
 ## Proceed only if interactive terminal
     if ! [[ -t 0 ]];then return; fi
