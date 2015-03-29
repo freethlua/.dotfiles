@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.8.00a
-if [[ "$dotfilesbashrcversion0800a" == "true" ]];then
+version=0.8.00b
+if [[ "$dotfilesbashrcversion0800b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0800a="true"
+    dotfilesbashrcversion0800b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -125,9 +125,10 @@ function .v(){
             local branch="master"
             if [[ -n "$1" ]];then local remote="$1"; fi
             if [[ -n "$2" ]];then local branch="$2"; fi
+            if [[ "$remote" == "os" ]];then local remote="openshift"; fi
             echo Pushing to:\"$remote\" branch:\"$branch\"
             command git push -f --thin $remote $branch
-            printf "\a\a\a\a\n"
+            printf '\a\a\a\a\n'
         }
     # commit & push
         function gcp(){
@@ -207,10 +208,21 @@ function .v(){
             command node $@
         else
             command node . $@
-            read -rsp $"Press enter to continue...\n"
-            # read -rsp $"Press escape to continue...\n" -d $"\e"
+            read -rsp $'Press enter to continue...\n'
+            # read -rsp $'Press escape to continue...\n' -d $'\e'
             clear
             node $@
+        fi
+    }
+    function babel(){
+        if [ ! -f ./index.js ]; then
+            command babel-node $@
+        else
+            command babel-node . $@
+            read -rsp $'Press enter to continue...\n'
+            # read -rsp $'Press escape to continue...\n' -d $'\e'
+            clear
+            babel-node $@
         fi
     }
 ## npm related
@@ -232,7 +244,7 @@ function .v(){
             local whoami="$(npm whoami)"
             echo You are $whoami
             if [[ $whoami == *"Not authed"* ]]; then return; fi
-            read -rsp $"Press Enter to Publish\n"
+            read -rsp $'Press Enter to Publish\n'
             echo Upping patch version...
             if [[ -z "$@" ]]; then
                 npm version patch
