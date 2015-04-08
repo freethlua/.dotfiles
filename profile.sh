@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.8.00b
-if [[ "$dotfilesbashrcversion0800b" == "true" ]];then
+version=0.8.01a
+if [[ "$dotfilesbashrcversion0801a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0800b="true"
+    dotfilesbashrcversion0801a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -188,14 +188,14 @@ function .v(){
         #     if [[ -n "$1" && -n "$2" ]];then
         #         local from="$1"
         #         local to="$2"
-        #         command git filter-branch --commit-filter 'if [ "$GIT_COMMITTER_NAME" = "x" ]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
+        #         command git filter-branch --commit-filter 'if [[ "$GIT_COMMITTER_NAME" = "x" ]]; then export GIT_AUTHOR_NAME="$to"; GIT_COMMITTER_NAME="$to"; export GIT_AUTHOR_EMAIL=$to@gmail.com; export GIT_COMMITTER_EMAIL=$to@gmail.com; fi; git commit-tree "$@"'
         #     fi
         # }
 ##notify
     #notify
         function notify {
             nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
-            if [ "$?" -ne "0" ]; then
+            if [[ "$?" -ne "0" ]]; then
                 echo -e "\a\a"
             fi
         }
@@ -204,18 +204,20 @@ function .v(){
 ## node related
     # node .
     function node(){
-        if [ ! -f ./index.js ]; then
-            command node $@
-        else
-            command node . $@
-            read -rsp $'Press enter to continue...\n'
-            # read -rsp $'Press escape to continue...\n' -d $'\e'
+        if [[ -f ./app.js ]]; then local file="app.js"; fi
+        if [[ -f ./index.js ]]; then local file="index.js"; fi
+        if [[ -n $file ]]; then
+            echo -e "Running $file $@\n=======\n"
+            command node $file $@
+            read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
             clear
             node $@
+        else
+            command node $@
         fi
     }
     function babel(){
-        if [ ! -f ./index.js ]; then
+        if [[ ! -f ./index.js ]]; then
             command babel-node $@
         else
             command babel-node . $@
@@ -617,7 +619,7 @@ function .v(){
         # check if git available
         function __git_ps1(){
             local b="$(git symbolic-ref HEAD 2>/dev/null)";
-            if [ -n "$b" ]; then
+            if [[ -n "$b" ]]; then
                 printf " (%s)" "${b##refs/heads/}";
             fi
         }
