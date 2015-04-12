@@ -208,31 +208,31 @@ function .v(){
 
 ## node related
     # node .
-    function node(){
-        if [[ -f ./app.js ]]; then local file="app.js"; fi
-        if [[ -f ./server.js ]]; then local file="server.js"; fi
-        if [[ -f ./index.js ]]; then local file="index.js"; fi
-        if [[ -n $file ]]; then
-            echo -e "Running $file $@\n=======\n"
-            command node $file $@
-            read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
-            clear
-            node $@
-        else
-            command node $@
-        fi
-    }
-    function babel(){
-        if [[ ! -f ./index.js ]]; then
-            command babel-node $@
-        else
-            command babel-node . $@
-            read -rsp $'Press enter to continue...\n'
-            # read -rsp $'Press escape to continue...\n' -d $'\e'
-            clear
-            babel-node $@
-        fi
-    }
+        function node(){
+            if [[ -f ./app.js ]]; then local file="app.js"; fi
+            if [[ -f ./server.js ]]; then local file="server.js"; fi
+            if [[ -f ./index.js ]]; then local file="index.js"; fi
+            if [[ -n $file ]]; then
+                echo -e "Running $file $@\n=======\n"
+                command node $file $@
+                read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+                clear
+                node $@
+            else
+                command node $@
+            fi
+        }
+        function babel(){
+            if [[ ! -f ./index.js ]]; then
+                command babel-node $@
+            else
+                command babel-node . $@
+                read -rsp $'Press enter to continue...\n'
+                # read -rsp $'Press escape to continue...\n' -d $'\e'
+                clear
+                babel-node $@
+            fi
+        }
 ## npm related
     # .npmrc if exists, run with that (usefull for multiple accounts on same machine)
         function npm(){
@@ -431,7 +431,19 @@ function .v(){
         function mocha(){
             command mocha --no-colors $@
         }
-## opsnshift related
+## c9 related
+    # tidy
+        function c9tidy(){
+            rm ~/tmp
+            rm ~/.npm
+            rm ~/.nvm
+            rm ~/workspace/node_modules
+            rm ~/workspace/node_modules
+            rm ~/data/$app*
+            df
+        }
+
+## openshift related
     # ! Store your appname, username, password, maybe token in your local .bashrc
         # export app="appname"
         # export osu="username"
