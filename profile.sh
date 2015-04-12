@@ -318,7 +318,12 @@ function .v(){
             ls -1Ash --color=always
         }
     # disk usage; default
-        duarg="-hsc *"
+        # duarg="-hsc *"
+        # duarg="-hsc * .*"
+        # duarg="-hsc .[!.]* *"
+        # duarg="-hsc .[^.]*"
+        duarg="-hsc .[^.]* *"
+        # http://askubuntu.com/questions/356902/why-doesnt-this-show-the-hidden-files-folders#comment852800_356902
         sort -h /dev/null > /dev/null 2>&1
         if [[ $? -eq 0 ]];then
             dusortarg="| sort -h"
