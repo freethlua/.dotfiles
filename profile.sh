@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.8.04a
-if [[ "$dotfilesbashrcversion0804a" == "true" ]];then
+version=0.8.05a
+if [[ "$dotfilesbashrcversion0805a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0804a="true"
+    dotfilesbashrcversion0805a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -461,7 +461,7 @@ function .v(){
             elif [[ -n "$ost" ]];then
                 local auth="--token $ost"
             fi
-            command rhc $@ $auth -a $app
+            eval "command rhc $@ $auth -a $app"
         }
     # ssh into opsnshift
         function sshos(){
