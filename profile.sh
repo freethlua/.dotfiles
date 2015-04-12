@@ -137,6 +137,7 @@ function .v(){
         }
         function gcpos(){
             gcp $@
+            rhc app-tidy
             push os
         }
 
@@ -451,11 +452,7 @@ function .v(){
             fi
             rhc ssh $command
         }
-    # oslogs [f][r]
-        # view oslogs of nodejs.log;
-        # default tailed logs
-        # f=full logs from file
-        # r= in reverse order (latest bottom)
+    # oslogs
         function sshosl(){
             sshos tail -f app-root/logs/nodejs.log
         }
