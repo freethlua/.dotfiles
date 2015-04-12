@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.8.02a
-if [[ "$dotfilesbashrcversion0802a" == "true" ]];then
+version=0.8.03a
+if [[ "$dotfilesbashrcversion0803a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0802a="true"
+    dotfilesbashrcversion0803a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -134,6 +134,10 @@ function .v(){
         function gcp(){
             gc $@
             push
+        }
+        function gcpos(){
+            gcp $@
+            push os
         }
 
     # SSH
@@ -438,32 +442,22 @@ function .v(){
             elif [[ -n "$ost" ]];then
                 local auth="--token $ost"
             fi
-            # commands with a hyphen "-" in them automatically add your app name.
-            if [[ $1 == *-* ]];then
-                eval "command rhc $@ $auth -a $app"
-            else
-                eval "command rhc $@ $auth"
-            fi
+            command rhc $@ $auth -a $app
         }
     # ssh into opsnshift
         function sshos(){
-            rhc ssh $@ -a $app
+            if [[ -n "$@" ]];then
+                local command="--command '$@'"
+            fi
+            rhc ssh $command
         }
     # oslogs [f][r]
         # view oslogs of nodejs.log;
         # default tailed logs
         # f=full logs from file
         # r= in reverse order (latest bottom)
-        function oslogs(){
-            if [[ "${1:0:1}" == "f" ]];then
-                if [[ "${1:1:2}" == "r" ]] || [[ "${2:0:1}" == "r" ]];then
-                    sshos "--command 'tac app-root/logs/nodejs.log'"
-                else
-                    sshos "--command 'cat app-root/logs/nodejs.log'"
-                fi
-            else
-                rhc tail -f app-root/logs/nodejs.log -a $app
-            fi
+        function sshosl(){
+            sshos tail -f app-root/logs/nodejs.log
         }
 ## mysql apache related
     #mysql
