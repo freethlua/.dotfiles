@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
 
-version=0.8.05a
-if [[ "$dotfilesbashrcversion0805a" == "true" ]];then
+version=0.8.06a
+if [[ "$dotfilesbashrcversion0806a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0805a="true"
+    dotfilesbashrcversion0806a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -209,17 +209,21 @@ function .v(){
 ## node related
     # node .
         function node(){
-            if [[ -f ./app.js ]]; then local file="app.js"; fi
-            if [[ -f ./server.js ]]; then local file="server.js"; fi
-            if [[ -f ./index.js ]]; then local file="index.js"; fi
-            if [[ -n $file ]]; then
-                echo -e "Running $file $@\n=======\n"
-                command node $file $@
-                read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
-                clear
-                node $@
-            else
+            if [[ -n $@ ]]; then
                 command node $@
+            else
+                if [[ -f ./app.js ]]; then local file="app.js"; fi
+                if [[ -f ./server.js ]]; then local file="server.js"; fi
+                if [[ -f ./index.js ]]; then local file="index.js"; fi
+                if [[ -n $file ]]; then
+                    echo -e "Running $file $@\n=======\n"
+                    command node $file $@
+                    read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+                    clear
+                    node $@
+                else
+                    command node $@
+                fi
             fi
         }
         function babel(){
