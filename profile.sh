@@ -1,17 +1,17 @@
 #!/bin/bash
 # .dotfiles | .bashrc
 # put in your .bashrc like so:
-# source <(curl -s https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc)
+# source <(curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc)
 # or
-# curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc
+# curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc
 # or
-# if [[ -t 0 ]];then curl https://raw.githubusercontent.com/xxx/.dotfiles/master/.bashrc -s -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm /tmp/temp.bashrc; fi
+# if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.06a
-if [[ "$dotfilesbashrcversion0806a" == "true" ]];then
+version=0.8.07a
+if [[ "$dotfilesbashrcversion0807a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0806a="true"
+    dotfilesbashrcversion0807a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -22,6 +22,10 @@ function .v(){
     if [[ -f .bashrc ]];then
         . .bashrc
     fi
+
+rm(){
+    rm -rf $@
+}
 
 ## Git related
     # Pretty Git graph
@@ -258,16 +262,15 @@ function .v(){
             if [[ $whoami == *"Not authed"* ]]; then return; fi
             read -rsp $'Press Enter to Publish\n'
             echo Upping patch version...
-            if [[ -z "$@" ]]; then
-                npm version patch
+            if [[ -n "$@" ]]; then
+                npm version patch -m "$@"
             else
-                local msg="$@"
-                npm version patch -m "$msg"
+                npm version patch
             fi
+            echo Git Pushing...
+            gcp $@
             echo Publishing...
             npm publish
-            echo Git Pushing...
-            gcp
             echo Done
             notify
         }

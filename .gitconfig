@@ -1,8 +1,9 @@
 [user]
-	name = x
-	email = x
+    name = root
+    email = root
 [push]
-	default = matching
+    default = matching
 [core]
     autocrlf = input
     safecrlf = false
+    excludesfile = ~/.gitignore
