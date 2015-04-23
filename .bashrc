@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.08a
-if [[ "$dotfilesbashrcversion0808a" == "true" ]];then
+version=0.8.08b
+if [[ "$dotfilesbashrcversion0808b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0808a="true"
+    dotfilesbashrcversion0808b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -23,7 +23,7 @@ function .v(){
         . .bashrc
     fi
 
-alias rm=rm -rf $@
+alias rm="rm -rf $@"
 
 ## Git related
     # Pretty Git graph
