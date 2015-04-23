@@ -23,9 +23,7 @@ function .v(){
         . .bashrc
     fi
 
-rm(){
-    rm -rf $@
-}
+alias rm=rm -rf $@
 
 ## Git related
     # Pretty Git graph
