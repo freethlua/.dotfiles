@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.07a
-if [[ "$dotfilesbashrcversion0807a" == "true" ]];then
+version=0.8.08a
+if [[ "$dotfilesbashrcversion0808a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0807a="true"
+    dotfilesbashrcversion0808a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -701,13 +701,13 @@ rm(){
             # PS1='\[\033[33m\]\w$(__git_ps1)\[\033[0m\] $'
             # PS1='\[\033[0m\]\[\033[32m\]\u@\h \[\033[33m\]\w$(__git_ps1)\[\033[0m\]\n$'
         }
-        p
-        function ps(){
-            p
-        }
-        function ps1(){
-            p
-        }
+        # p
+        # function ps(){
+        #     p
+        # }
+        # function ps1(){
+        #     p
+        # }
     # Title
         function PCremote(){
             if [[ -n "$remote" ]];then
@@ -726,6 +726,8 @@ rm(){
             # Last command execution time
                 # last_execution_time_prompt_command
                 timer_stop
+            # PS1
+                p
         }
         PROMPT_COMMAND="prompt_command"
 
