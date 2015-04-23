@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.08b
-if [[ "$dotfilesbashrcversion0808b" == "true" ]];then
+version=0.8.09a
+if [[ "$dotfilesbashrcversion0809a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0808b="true"
+    dotfilesbashrcversion0809a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -145,13 +145,16 @@ alias rm="rm -rf $@"
 
     # SSH
         function ssh(){
-            if [[ -n $2 && ! $2 == *-* ]]; then
-                local command="echo \"${@:2}\" | command ssh $1"
-            else
-                local command="command ssh $@"
-            fi
-            # echo "$command"
-            eval "$command"
+            command ssh -t $@
+            # if [[ -n $2 && ! $2 == *-* ]]; then
+            #     local command="${@:2}"
+            # fi
+            #     # command ssh -t $1 "${@:2}"
+            #     # local command="echo \"${@:2}\" | command ssh $1"
+            # # else
+            # #     local command="command ssh $@"
+            # # # echo "$command"
+            # # eval "$command"
         }
         # function ssh(){
         #     command ssh "$@"
