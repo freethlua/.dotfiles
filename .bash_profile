@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.11a
-if [[ "$dotfilesbashrcversion0811a" == "true" ]];then
+version=0.8.12a
+if [[ "$dotfilesbashrcversion0812a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0811a="true"
+    dotfilesbashrcversion0812a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -358,7 +358,7 @@ alias rm="rm -rf $@"
         }
     # ls
         function ls(){
-            command ls -A --color=always $@
+            command ls -Ahl $@
             d
         }
     # remove
