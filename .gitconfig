@@ -7,3 +7,13 @@
     autocrlf = input
     safecrlf = false
     excludesfile = ~/.gitignore
+    ignorecase = true
+
+# Decrease the disk usage of the repository redd.it/2r68gf
+[core]
+    compression = 9
+[pack]
+    window = 20
+[gc]
+    auto = 1000
+    autopacklimit = 10

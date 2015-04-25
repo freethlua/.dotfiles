@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.09a
-if [[ "$dotfilesbashrcversion0809a" == "true" ]];then
+version=0.8.10a
+if [[ "$dotfilesbashrcversion0810a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0809a="true"
+    dotfilesbashrcversion0810a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -373,6 +373,10 @@ alias rm="rm -rf $@"
         }
         function cd/(){
             command cd /
+        }
+    # yum install
+        function yum(){
+            yum -y $@
         }
     # screen
         function screen(){
