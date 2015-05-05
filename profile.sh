@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.12a
-if [[ "$dotfilesbashrcversion0812a" == "true" ]];then
+version=0.8.22a
+if [[ "$dotfilesbashrcversion0822a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0812a="true"
+    dotfilesbashrcversion0822a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -537,7 +537,10 @@ alias rm="rm -rf $@"
             else
                 local user="-u root"
             fi
-            command mysqldump $user $password $@
+            if [[ -z "$@" ]];then
+                local alldbs="--all-databases"
+            fi
+            command mysqldump $user $password $alldbs $@
         }
     #apache
         function apache(){
