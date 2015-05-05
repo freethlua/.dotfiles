@@ -8,3 +8,10 @@
 *.sublime*
 node_modules
 bower_modules
+.settings
+
+*.min.css*
+*.min.js*
+
+
+thumbs.db
