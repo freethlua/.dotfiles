@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.22a
-if [[ "$dotfilesbashrcversion0822a" == "true" ]];then
+version=0.8.25a
+if [[ "$dotfilesbashrcversion0825a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0822a="true"
+    dotfilesbashrcversion0825a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -26,20 +26,35 @@ function .v(){
 alias rm="rm -rf $@"
 
 ## Git related
-    # Pretty Git graph
+    # git
+        function git(){
+            # Pretty Git graph
+            if [[ "log" == "$1" ]]; then
+                if [[ -n "$2" ]]; then
+                    command git log ${@:2}
+                else
+                    command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
+                fi
+            else
+                command git $@
+            fi
+        }
         function gl(){
-            command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
-        }
-        function log(){
-            gl
-        }
-    # git gui
-        function gui(){
-            command git gui
+            git log
         }
     # git gui and gitk
+        function gui(){
+            git gui
+        }
+        function gitk(){
+            if [[ -n "$@" ]];then
+                command gitk $@
+            else
+                command gitk --all --branches --tags --remotes --date-order --full-history
+            fi
+        }
         function guik(){
-            command gitk & git gui
+            gitk & gui
         }
     # commit auto
         function gc(){
@@ -66,6 +81,8 @@ alias rm="rm -rf $@"
         function remote(){
             if [[ -z "$@" ]];then
                 command git remote -v
+            elif [[ "$1" == *"@"* || "$1" == *"http"* ]];then
+                command git remote add origin $1
             else
                 command git remote $@
             fi
@@ -74,7 +91,9 @@ alias rm="rm -rf $@"
         function status(){
             command git status $@
         }
-        alias st="status"
+        function st(){
+            status $@
+        }
     # git checkout
         function checkout(){
             local args=$@
@@ -84,7 +103,9 @@ alias rm="rm -rf $@"
             fi
             command git checkout $args
         }
-        alias ch="checkout"
+        function ch(){
+            checkout $@
+        }
     # git add
         function add(){
             local args=$@
@@ -93,7 +114,6 @@ alias rm="rm -rf $@"
             fi
             command git add $args
         }
-        alias ch="checkout"
     # git checkout master
         function master(){
             checkout $@ master

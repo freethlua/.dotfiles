@@ -10,6 +10,7 @@ set wrapcomment none
 set autoselect 1
 set autosellen 40
 set showneartags 1
+set maxrefs 20
 set hideremotes 0
 set showlocalchanges 1
 set datetimeformat {%Y-%m-%d %H:%M:%S}
@@ -18,19 +19,44 @@ set uicolor SystemButtonFace
 set want_ttk 1
 set bgcolor SystemWindow
 set fgcolor SystemButtonText
+set uifgcolor SystemButtonText
+set uifgdisabledcolor SystemDisabledText
 set colors {green red blue magenta darkgrey brown orange}
 set diffcolors {red "#00a000" blue}
+set mergecolors {red blue green purple brown "#009090" magenta "#808000" "#009000" "#ff0080" cyan "#b07070" "#70b0f0" "#70f0b0" "#f0b070" "#ff70b0"}
 set markbgcolor #e0e0ff
-set diffcontext 3
+set diffcontext 0
 set selectbgcolor SystemHighlight
+set foundbgcolor yellow
+set currentsearchhitbgcolor orange
 set extdifftool meld
 set perfile_attrs 0
-set geometry(main) 1172x725+-16+0
+set headbgcolor green
+set headfgcolor black
+set headoutlinecolor black
+set remotebgcolor #ffddaa
+set tagbgcolor yellow
+set tagfgcolor black
+set tagoutlinecolor black
+set reflinecolor black
+set filesepbgcolor #aaaaaa
+set filesepfgcolor black
+set linehoverbgcolor #ffff80
+set linehoverfgcolor black
+set linehoveroutlinecolor black
+set mainheadcirclecolor yellow
+set workingfilescirclecolor red
+set indexcirclecolor green
+set circlecolors {white blue gray blue blue}
+set linkfgcolor blue
+set circleoutlinecolor SystemWindowText
+set geometry(main) 1172x725+78+0
 set geometry(state) zoomed
 set geometry(topwidth) 1172
-set geometry(topheight) 394
+set geometry(topheight) 322
 set geometry(pwsash0) "648 1"
 set geometry(pwsash1) "668 1"
-set geometry(botwidth) 532
-set geometry(botheight) 326
-set permviews {}
+set geometry(botwidth) 623
+set geometry(botheight) 398
+set permviews {{{All files} {} {--all --branches --tags --remotes --date-order} {}}
+}
