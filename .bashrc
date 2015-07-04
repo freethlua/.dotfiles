@@ -390,7 +390,7 @@ alias rm="rm -rf $@"
             ls -1Ash --color=always
         }
     # mkdir cd
-        function mkcdir(){
+        function mkcd(){
             mkdir $@
             cd $@
         }
