@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.8.25a
-if [[ "$dotfilesbashrcversion0825a" == "true" ]];then
+version=0.9.0a
+if [[ "$dotfilesbashrcversion090a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0825a="true"
+    dotfilesbashrcversion090a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -122,18 +122,26 @@ alias rm="rm -rf $@"
         function pull(){
             local remote="origin"
             if [[ $1 == "gh" ]];then
-                remote="github"
+                local remote="github"
             fi
             if [[ $1 == "bb" ]];then
-                remote="bitbucket"
+                local remote="bitbucket"
             fi
             if [[ $1 == "os" ]];then
-                remote="openshift"
+                local remote="openshift"
+            fi
+            if [[ $1 == "wp" ]];then
+                local remote="wp-engine"
+                local branch="wp-engine"
+            fi
+            if [[ $1 == "wpst" ]];then
+                local remote="wp-engine-staging"
+                local branch="wp-engine"
             fi
             local branch="$(git rev-parse --symbolic-full-name HEAD)"
             if [[ $remote == "origin" ]];then
                 if [[ -n "$1" ]];then
-                    branch="$1"
+                    local branch="$1"
                 fi
             fi
             if [[ -n "$2" ]];then
@@ -143,13 +151,42 @@ alias rm="rm -rf $@"
         }
     # push [gh/bb/os]
         function push(){
+            if [[ $1 == -* ]];then command git push $@; return; fi
+
             local remote="origin"
             local branch="master"
+
             if [[ -n "$1" ]];then local remote="$1"; fi
             if [[ -n "$2" ]];then local branch="$2"; fi
-            if [[ "$remote" == "os" ]];then local remote="openshift"; fi
-            echo Pushing to:\"$remote\" branch:\"$branch\"
-            command git push -f --thin $remote $branch
+
+            # if [[ "$remote" == "os" ]];then local remote="openshift"; fi
+
+            if [[ $1 == "gh" ]];then
+                local remote="github"
+            fi
+            if [[ $1 == "bb" ]];then
+                local remote="bitbucket"
+            fi
+            if [[ $1 == "os" ]];then
+                local remote="openshift"
+            fi
+            if [[ $1 == "wp" ]];then
+                local remote="wp-engine"
+                local branch="wp-engine"
+            fi
+            if [[ $1 == "wpst" ]];then
+                local remote="wp-engine-staging"
+                local branch="wp-engine"
+            fi
+
+            if [[ $branch == "master" ]];then
+                local all="--all"
+                local branch=
+            fi
+
+
+            echo Pushing to:\"$remote\" branch:\"$branch$all\"
+            command git push -f $all --thin $remote $branch
             printf '\a\a\a\a\n'
         }
     # commit & push
@@ -237,9 +274,9 @@ alias rm="rm -rf $@"
             if [[ -n $@ ]]; then
                 command node $@
             else
-                if [[ -f ./app.js ]]; then local file="app.js"; fi
                 if [[ -f ./server.js ]]; then local file="server.js"; fi
                 if [[ -f ./index.js ]]; then local file="index.js"; fi
+                if [[ -f ./app.js ]]; then local file="app.js"; fi
                 if [[ -n $file ]]; then
                     echo -e "Running $file $@\n=======\n"
                     command node $file $@
@@ -627,6 +664,28 @@ alias rm="rm -rf $@"
                     fi
                 fi
             fi
+        }
+
+## wp-engine related
+    # wpmerge
+        function wpmerge(){
+            if [[ "$(__git_ps1)" != " (master)" ]];then
+                echo "You are not on Master branch. Checkout Master branch and commit any unsaved changes first."
+                return;
+            fi
+            gc
+            echo Step 1: Checking out [wp-engine]
+            checkout wp-engine
+            echo Step 2: Import changes from [master]
+            checkout master -- .
+            echo Step 2: Unstage
+            git reset
+            echo Step 3: Restore .gitignore
+            checkout -- .gitignore
+            echo Step 4: Re-stage and commit
+            gc "merge master"
+            echo Step 5: Go back to master
+            checkout master
         }
 
 
