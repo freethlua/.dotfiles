@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.9.0a
-if [[ "$dotfilesbashrcversion090a" == "true" ]];then
+version=0.9.1a
+if [[ "$dotfilesbashrcversion091a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion090a="true"
+    dotfilesbashrcversion091a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -199,6 +199,12 @@ alias rm="rm -rf $@"
             rhc app-tidy
             push os
         }
+    # init, remote, commit & push
+        function gircp(){
+            git init
+            remote $@
+            gcp initial commit
+        }
 
     # SSH
         function ssh(){
@@ -382,6 +388,11 @@ alias rm="rm -rf $@"
         }
         function dir(){
             ls -1Ash --color=always
+        }
+    # mkdir cd
+        function mkcdir(){
+            mkdir $@
+            cd $@
         }
     # disk usage; default
         # duarg="-hsc *"
