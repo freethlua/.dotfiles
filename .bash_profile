@@ -200,7 +200,7 @@ alias rm="rm -rf $@"
             push os
         }
     # init, remote, commit & push
-        function gircp(){
+        function girp(){
             git init
             remote $@
             gcp initial commit
