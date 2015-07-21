@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.9.1a
-if [[ "$dotfilesbashrcversion091a" == "true" ]];then
+version=0.9.2a
+if [[ "$dotfilesbashrcversion092a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion091a="true"
+    dotfilesbashrcversion092a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -83,6 +83,7 @@ alias rm="rm -rf $@"
                 command git remote -v
             elif [[ "$1" == *"@"* || "$1" == *"http"* ]];then
                 command git remote add origin $1
+                command git remote set-url origin $1
             else
                 command git remote $@
             fi
@@ -192,7 +193,7 @@ alias rm="rm -rf $@"
     # commit & push
         function gcp(){
             gc $@
-            push
+            push $@
         }
         function gcpos(){
             gcp $@
@@ -325,17 +326,19 @@ alias rm="rm -rf $@"
             echo You are $whoami
             if [[ $whoami == *"Not authed"* ]]; then return; fi
             read -rsp $'Press Enter to Publish\n'
-            echo Upping patch version...
+            echo -e "\n Comitting unsaved changes, if any..."
+            gc $@
+            echo -e "\n Upping patch version..."
             if [[ -n "$@" ]]; then
                 npm version patch -m "$@"
             else
                 npm version patch
             fi
-            echo Git Pushing...
+            echo -e "\n Git Push..."
             gcp $@
-            echo Publishing...
+            echo -e "\n Publishing..."
             npm publish
-            echo Done
+            echo -e "\n Done"
             notify
         }
 
