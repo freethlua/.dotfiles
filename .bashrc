@@ -19,8 +19,8 @@ function .v(){
 }
 # clear
 ## Run local .bashrc(s)
-    if [[ -f .bashrc ]];then
-        . .bashrc
+    if [[ -f ./.bashrc ]];then
+        . ./.bashrc
     fi
 
 alias rm="rm -rf $@"
@@ -193,7 +193,7 @@ alias rm="rm -rf $@"
     # commit & push
         function gcp(){
             gc $@
-            push $@
+            push
         }
         function gcpos(){
             gcp $@
@@ -278,16 +278,22 @@ alias rm="rm -rf $@"
 ## node related
     # node .
         function node(){
+            if [[ $1 =~ loop|run ]]; then local loop=true; shift; fi
             if [[ -n $@ ]]; then
                 command node $@
             else
+                if [[ -f ./server/index.js ]]; then local file="server/index.js"; fi
                 if [[ -f ./server.js ]]; then local file="server.js"; fi
                 if [[ -f ./index.js ]]; then local file="index.js"; fi
                 if [[ -f ./app.js ]]; then local file="app.js"; fi
                 if [[ -n $file ]]; then
-                    echo -e "Running $file $@\n=======\n"
-                    command node $file $@
-                    read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+                    echo -e "Running $file $@ \n=======\n"
+                    eval "command node $file $@ 2>&1 | tee -a .log"
+                    if [[ "$loop" == "true" ]]; then
+                        echo -e "\n=x=====================x=\n"
+                    else
+                        read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+                    fi
                     clear
                     node $@
                 else

@@ -9,6 +9,9 @@
     excludesfile = ~/.gitignore
     ignorecase = true
 
+[gui]
+    maxfilesdisplayed = 500
+
 # Decrease the disk usage of the repository redd.it/2r68gf
 [core]
     compression = 9
