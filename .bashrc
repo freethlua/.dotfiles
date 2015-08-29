@@ -289,6 +289,7 @@ alias rm="rm -rf $@"
                 if [[ -n $file ]]; then
                     echo -e "Running $file $@ \n=======\n"
                     eval "command node $file $@ 2>&1 | tee -a .log"
+                    # eval "command node $file $@"
                     if [[ "$loop" == "true" ]]; then
                         echo -e "\n=x=====================x=\n"
                     else
@@ -334,12 +335,12 @@ alias rm="rm -rf $@"
             read -rsp $'Press Enter to Publish\n'
             echo -e "\n Comitting unsaved changes, if any..."
             gc $@
-            echo -e "\n Upping patch version..."
-            if [[ -n "$@" ]]; then
-                npm version patch -m "$@"
-            else
-                npm version patch
-            fi
+            # echo -e "\n Upping patch version..." (You manually update it)
+            # if [[ -n "$@" ]]; then
+            #     npm version patch -m "$@"
+            # else
+            #     npm version patch
+            # fi
             echo -e "\n Git Push..."
             gcp $@
             echo -e "\n Publishing..."
@@ -389,6 +390,9 @@ alias rm="rm -rf $@"
         fi
     # exit
         function e(){
+            command exit
+        }
+        function q(){
             command exit
         }
     # directory
