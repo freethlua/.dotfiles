@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.9.3a
-if [[ "$dotfilesbashrcversion093a" == "true" ]];then
+version=0.9.4a
+if [[ "$dotfilesbashrcversion094a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion093a="true"
+    dotfilesbashrcversion094a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -295,7 +295,7 @@ alias rm="rm -rf $@"
                     else
                         read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
                     fi
-                    clear
+                    # clear
                     node $@
                 else
                     command node $@
