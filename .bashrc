@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.9.4a
-if [[ "$dotfilesbashrcversion094a" == "true" ]];then
+version=0.9.5a
+if [[ "$dotfilesbashrcversion095a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion094a="true"
+    dotfilesbashrcversion095a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -33,7 +33,9 @@ alias rm="rm -rf $@"
                 if [[ -n "$2" ]]; then
                     command git log ${@:2}
                 else
-                    command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
+                    # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
+                    command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d"
+                    # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --date=relative --format=format:"%h %ar %cn %s %d"
                 fi
             else
                 command git $@
@@ -368,7 +370,7 @@ alias rm="rm -rf $@"
             # export local="trueByPort"
             export PORT="80"
         fi
-        export env="dev"
+        # export env="dev"
         if [[ -n "$C9_USER" ]];then
             export remote="C9"
             export app="$C9_PROJECT"
@@ -673,7 +675,7 @@ alias rm="rm -rf $@"
                 elif [[ "$remote" == "C9" ]];then
                     mkdir /home/ubuntu/data
                     rm /home/ubuntu/data/mongod.lock
-                    command mongod --bind_ip=$IP --dbpath=/home/ubuntu/data --nojournal &
+                    command mongod --bind_ip=$IP --dbpath=/home/ubuntu/data --nojournal --smallfiles &
                 else
                     if [[ -z "$@" ]];then
                         command mongod
