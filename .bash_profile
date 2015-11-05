@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.9.5a
-if [[ "$dotfilesbashrcversion095a" == "true" ]];then
+version=0.10.0a
+if [[ "$dotfilesbashrcversion0100a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion095a="true"
+    dotfilesbashrcversion0100a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -280,7 +280,9 @@ alias rm="rm -rf $@"
 ## node related
     # node .
         function node(){
-            if [[ $1 =~ loop|run ]]; then local loop=true; shift; fi
+            local flags="--harmony --harmony_modules --harmony_regexps --harmony_proxies --harmony_sloppy_function --harmony_sloppy_let --harmony_unicode_regexps --harmony_reflect --harmony_destructuring --harmony_default_parameters --harmony_sharedarraybuffer --harmony_atomics --harmony_simd"
+            # if [[ $1 =~ loop|run ]]; then local loop=true; shift; fi
+            if [[ $1 == loop ]]; then local loop=true; shift; fi
             if [[ -n $@ ]]; then
                 command node $@
             else
@@ -290,7 +292,7 @@ alias rm="rm -rf $@"
                 if [[ -f ./app.js ]]; then local file="app.js"; fi
                 if [[ -n $file ]]; then
                     echo -e "Running $file $@ \n=======\n"
-                    eval "command node $file $@ 2>&1 | tee -a .log"
+                    eval "command node $@ $flags $file 2>&1 | tee -a .log"
                     # eval "command node $file $@"
                     if [[ "$loop" == "true" ]]; then
                         echo -e "\n=x=====================x=\n"
