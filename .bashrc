@@ -559,6 +559,7 @@ alias rm="rm -rf $@"
             elif [[ -n "$ost" ]];then
                 local auth="--token $ost"
             fi
+            # echo "command rhc $@ $auth -a $app"
             eval "command rhc $@ $auth -a $app"
         }
     # ssh into opsnshift
