@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.10.0a
-if [[ "$dotfilesbashrcversion0100a" == "true" ]];then
+version=0.11.0a
+if [[ "$dotfilesbashrcversion0110a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0100a="true"
+    dotfilesbashrcversion0110a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -280,7 +280,8 @@ alias rm="rm -rf $@"
 ## node related
     # node .
         function node(){
-            local flags="--harmony --harmony_modules --harmony_regexps --harmony_proxies --harmony_sloppy_function --harmony_sloppy_let --harmony_unicode_regexps --harmony_reflect --harmony_destructuring --harmony_default_parameters --harmony_sharedarraybuffer --harmony_atomics --harmony_simd"
+            # local flags="--harmony --harmony_modules --harmony_regexps --harmony_proxies --harmony_sloppy_function --harmony_sloppy_let --harmony_unicode_regexps --harmony_reflect --harmony_destructuring --harmony_default_parameters --harmony_sharedarraybuffer --harmony_atomics --harmony_simd"
+            local flags=""
             # if [[ $1 =~ loop|run ]]; then local loop=true; shift; fi
             if [[ $1 == loop ]]; then local loop=true; shift; fi
             if [[ -n $@ ]]; then
