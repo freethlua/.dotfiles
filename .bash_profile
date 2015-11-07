@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.11.1a
-if [[ "$dotfilesbashrcversion0111a" == "true" ]];then
+version=0.11.1b
+if [[ "$dotfilesbashrcversion0111b" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0111a="true"
+    dotfilesbashrcversion0111b="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -383,7 +383,7 @@ alias rm="rm -rf $@"
             export remote="OS"
             export OPENSHIFT="true"
             # export OPENSHIFT_HOME_DIR="app-root/data/"
-            export HOME=$HOME$OPENSHIFT_REPO_DIR
+            export HOME=$OPENSHIFT_REPO_DIR
             function logs(){
                 cd $OPENSHIFT_LOG_DIR
             }
