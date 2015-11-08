@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.13.0a
-if [[ "$dotfilesbashrcversion0130a" == "true" ]];then
+version=1.0.0
+if [[ "$dotfilesbashrcversion100" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0130a="true"
+    dotfilesbashrcversion100="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -562,21 +562,28 @@ alias rm="rm -rf $@"
                 export osp=$@
             }
     # rhc <commands>
-        function rhc(){
+        function rhca(){
             if [[ -n "$osp" ]];then
                 local auth="--server openshift.redhat.com -l $osu -p $osp"
             elif [[ -n "$ost" ]];then
                 local auth="--token $ost"
             fi
-            # echo "command rhc $@ $auth -a $app"
             eval "command rhc $@ $auth -a $app"
+        }
+        function rhcja(){
+            if [[ -n "$osp" ]];then
+                local auth="--server openshift.redhat.com -l $osu -p $osp"
+            elif [[ -n "$ost" ]];then
+                local auth="--token $ost"
+            fi
+            eval "command rhc $@ $auth"
         }
     # ssh into opsnshift
         function sshos(){
             if [[ -n "$@" ]];then
                 local command="--command '$@'"
             fi
-            rhc ssh $command
+            rhca ssh $command
         }
     # oslogs
         function sshosl(){
