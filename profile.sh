@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=0.12.0a
-if [[ "$dotfilesbashrcversion0120a" == "true" ]];then
+version=0.13.0a
+if [[ "$dotfilesbashrcversion0130a" == "true" ]];then
     return
 else
-    dotfilesbashrcversion0120a="true"
+    dotfilesbashrcversion0130a="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -287,10 +287,12 @@ alias rm="rm -rf $@"
             if [[ -n $@ ]]; then
                 command node $@
             else
-                if [[ -f ./server/index.js ]]; then local file="server/index.js"; fi
-                if [[ -f ./server.js ]]; then local file="server.js"; fi
-                if [[ -f ./index.js ]]; then local file="index.js"; fi
-                if [[ -f ./app.js ]]; then local file="app.js"; fi
+                if [[ -f ./lib/index.js ]]; then cd lib; fi
+                if [[ -f ./server/index.js ]]; then local file="server"; fi
+                if [[ -f ./server.js ]]; then local file="server"; fi
+                if [[ -f ./index.js ]]; then local file="."; fi
+                if [[ -f ./app.js ]]; then local file="app"; fi
+                if [[ -f ./app/index.js ]]; then local file="app"; fi
                 if [[ -n $file ]]; then
                     echo -e "Running $file $@ \n=======\n"
                     eval "command node $@ $flags $file 2>&1 | tee -a .log"
@@ -668,7 +670,7 @@ alias rm="rm -rf $@"
             if [[ -n "$OPENSHIFT_MONGODB_DB_PASSWORD" ]];then
                 local auth="--host $OPENSHIFT_MONGODB_DB_HOST --port $OPENSHIFT_MONGODB_DB_PORT -u $OPENSHIFT_MONGODB_DB_USERNAME -p $OPENSHIFT_MONGODB_DB_PASSWORD"
             fi
-            eval "command mongo $args $commands $app"
+            eval "command mongo $auth $args $commands $app"
         }
     #mongod
         function mongod(){
