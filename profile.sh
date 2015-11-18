@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_3_2
-if [[ "$dotfilesbashrcversion1_3_2" == "true" ]];then
+version=1_3_3
+if [[ "$dotfilesbashrcversion1_3_3" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_3_2="true"
+    dotfilesbashrcversion1_3_3="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -362,7 +362,8 @@ alias rm="rm -rf $@"
                 local userconfig="--userconfig=npmrc"
             fi
             local globalignorefile="--globalignorefile=~/.gitignore"
-            eval "command npm $userconfig $globalignorefile $args $@ 2>&1 | tee -a npm_$1.log"
+            echo "\$npm $@" >> npm.log
+            eval "command npm $userconfig $globalignorefile $args $@ 2>&1 | tee -a npm.log"
         }
     # publish after incrementing version (patch)
         function publish(){
@@ -594,7 +595,8 @@ alias rm="rm -rf $@"
 
     # rhc <commands>
         rhc(){
-            command rhc $@ 2>&1 | tee -a rhc_$1.log
+            echo "\$rhc $@" >> rhc.log
+            eval "command rhc \"$@\" 2>&1 | tee -a rhc.log"
         }
     # rhc <commands>
         function rhca(){
@@ -618,11 +620,11 @@ alias rm="rm -rf $@"
             if [[ -n "$@" ]];then
                 local command="--command '$@'"
             fi
-            rhca ssh $command 2>&1 | tee -a rhc.log
+            rhca ssh $command
         }
     # oslogs
         function sshosl(){
-            sshos tail -n 100 -f app-root/logs/nodejs.log 2>&1 | tee -a nodejs_os.log
+            sshos tail -n 100 -f app-root/logs/nodejs.log
         }
 ## mysql apache related
     #mysql
