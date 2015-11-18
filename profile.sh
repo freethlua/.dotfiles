@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1.1.0
-if [[ "$dotfilesbashrcversion110" == "true" ]];then
+version=1_2_0
+if [[ "$dotfilesbashrcversion1_2_0" == "true" ]];then
     return
 else
-    dotfilesbashrcversion110="true"
+    dotfilesbashrcversion1_2_0="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -279,36 +279,71 @@ alias rm="rm -rf $@"
 
 ## node related
     # node .
-        function node(){
-            # local flags="--harmony --harmony_modules --harmony_regexps --harmony_proxies --harmony_sloppy_function --harmony_sloppy_let --harmony_unicode_regexps --harmony_reflect --harmony_destructuring --harmony_default_parameters --harmony_sharedarraybuffer --harmony_atomics --harmony_simd"
-            local flags=""
-            # if [[ $1 =~ loop|run ]]; then local loop=true; shift; fi
-            if [[ $1 == loop ]]; then local loop=true; shift; fi
-            if [[ -n $@ ]]; then
-                command node $@
+        function nodeloop(){
+            echo -e "Running node..."
+            eval "command node $@ $flags $file 2>&1 | tee -a .log"
+            # eval "command node $file $@"
+            if [[ "$loop" == "true" ]]; then
+                echo -e "\n=x=====================x=\n"
             else
-                if [[ -f ./lib/index.js ]]; then cd lib; fi
-                if [[ -f ./server/index.js ]]; then local file="server"; fi
-                if [[ -f ./server.js ]]; then local file="server"; fi
-                if [[ -f ./index.js ]]; then local file="."; fi
-                if [[ -f ./app.js ]]; then local file="app"; fi
-                if [[ -f ./app/index.js ]]; then local file="app"; fi
-                if [[ -n $file ]]; then
-                    echo -e "Running $file $@ \n=======\n"
-                    eval "command node $@ $flags $file 2>&1 | tee -a .log"
-                    # eval "command node $file $@"
-                    if [[ "$loop" == "true" ]]; then
-                        echo -e "\n=x=====================x=\n"
-                    else
-                        read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
-                    fi
-                    # clear
-                    node $@
-                else
-                    command node $@
-                fi
+                read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
             fi
+            # clear
+            node $@
         }
+        function node_getFileAuto(){
+            # if [[ -n $1 && -f $1 ]]; then local file=$1; shift; fi
+            if [[ -f ./lib/index.js ]]; then cd lib; local file="index.js"; fi
+            if [[ -f ./server/index.js ]]; then local file="server"; fi
+            if [[ -f ./server.js ]]; then local file="server.js"; fi
+            if [[ -f ./index.js ]]; then local file="index.js"; fi
+            if [[ -f ./app.js ]]; then local file="app.js"; fi
+            if [[ -f ./app/index.js ]]; then local file="app"; fi
+            echo "$file"
+        }
+        function node(){
+            # local file=$(node_getFileAuto)
+            echo -e "Running $@ \n=======\n"
+            eval "command node $file $@ $flags 2>&1 | tee -a .log"
+            if [[ "$loop" == "true" ]]; then
+                echo -e "\n=x=====================x=\n"
+            else
+                read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+            fi
+            # clear
+            node $@
+        }
+        # function node(){
+        #     # local flags="--harmony --harmony_modules --harmony_regexps --harmony_proxies --harmony_sloppy_function --harmony_sloppy_let --harmony_unicode_regexps --harmony_reflect --harmony_destructuring --harmony_default_parameters --harmony_sharedarraybuffer --harmony_atomics --harmony_simd"
+        #     local flags=""
+        #     # if [[ $@ =~ loop|run ]]; then local loop=true; shift; fi
+        #     # if [[ $1 == loop ]]; then local loop=true; shift; fi
+        #     if [[ $@ == *"loop" ]]; then local loop=true; shift; fi
+        #     if [[ -n $@ ]]; then
+        #         command node $@
+        #     else
+        #         if [[ -f ./lib/index.js ]]; then cd lib; fi
+        #         if [[ -f ./server/index.js ]]; then local file="server"; fi
+        #         if [[ -f ./server.js ]]; then local file="server"; fi
+        #         if [[ -f ./index.js ]]; then local file="."; fi
+        #         if [[ -f ./app.js ]]; then local file="app"; fi
+        #         if [[ -f ./app/index.js ]]; then local file="app"; fi
+        #         if [[ -n $file ]]; then
+        #             echo -e "Running $file $@ \n=======\n"
+        #             eval "command node $@ $flags $file 2>&1 | tee -a .log"
+        #             # eval "command node $file $@"
+        #             if [[ "$loop" == "true" ]]; then
+        #                 echo -e "\n=x=====================x=\n"
+        #             else
+        #                 read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+        #             fi
+        #             # clear
+        #             node $@
+        #         else
+        #             command node $@
+        #         fi
+        #     fi
+        # }
         function babel(){
             if [[ ! -f ./index.js ]]; then
                 command babel-node $@
