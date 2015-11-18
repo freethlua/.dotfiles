@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_2_0
-if [[ "$dotfilesbashrcversion1_2_0" == "true" ]];then
+version=1_3_0
+if [[ "$dotfilesbashrcversion1_3_0" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_2_0="true"
+    dotfilesbashrcversion1_3_0="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -28,21 +28,13 @@ alias rm="rm -rf $@"
 ## Git related
     # git
         function git(){
-            # Pretty Git graph
-            if [[ "log" == "$1" ]]; then
-                if [[ -n "$2" ]]; then
-                    command git log ${@:2}
-                else
-                    # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
-                    command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d"
-                    # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --date=relative --format=format:"%h %ar %cn %s %d"
-                fi
-            else
-                command git $@
-            fi
+            command git $@ 2>&1 | tee -a git_$1.log
         }
+    # git log
         function gl(){
-            git log
+            git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d"
+            # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
+            # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --date=relative --format=format:"%h %ar %cn %s %d"
         }
     # git gui and gitk
         function gui(){
@@ -50,9 +42,9 @@ alias rm="rm -rf $@"
         }
         function gitk(){
             if [[ -n "$@" ]];then
-                command gitk $@
+                gitk $@
             else
-                command gitk --all --branches --tags --remotes --date-order --full-history
+                gitk --all --branches --tags --remotes --date-order --full-history
             fi
         }
         function guik(){
@@ -60,16 +52,13 @@ alias rm="rm -rf $@"
         }
     # commit auto
         function gc(){
-            command git add -A
+            git add -A
             if [[ -z "$@" ]];then
-                command git commit -a -m "."
+                local message="."
             else
                 local message="$@"
-                command git commit -a -m "$message"
             fi
-        }
-        function gm(){
-            gc $@
+            git commit -a -m "$message"
         }
     # stash
         function stash(){
@@ -77,22 +66,22 @@ alias rm="rm -rf $@"
             if [[ $@ == s* ]];then
                 local args="save --keep-index"
             fi
-            command git stash $args
+            git stash $args
         }
     # git remote
         function remote(){
             if [[ -z "$@" ]];then
-                command git remote -v
+                git remote -v
             elif [[ "$1" == *"@"* || "$1" == *"http"* ]];then
-                command git remote add origin $1
-                command git remote set-url origin $1
+                git remote add origin $1
+                git remote set-url origin $1
             else
-                command git remote $@
+                git remote $@
             fi
         }
     # git status
         function status(){
-            command git status $@
+            git status $@
         }
         function st(){
             status $@
@@ -102,9 +91,9 @@ alias rm="rm -rf $@"
             local args=$@
             if [[ "$1" == "-" ]];then
                 local args="-- ."
-                command git clean -df
+                git clean -df
             fi
-            command git checkout $args
+            git checkout $args
         }
         function ch(){
             checkout $@
@@ -115,7 +104,7 @@ alias rm="rm -rf $@"
             if [[ -z "$args" ]];then
                 local args="-i"
             fi
-            command git add $args
+            git add $args
         }
     # git checkout master
         function master(){
@@ -150,11 +139,11 @@ alias rm="rm -rf $@"
             if [[ -n "$2" ]];then
                 branch="$2"
             fi
-            command git pull -t $remote $branch
+            git pull -t $remote $branch
         }
     # push [gh/bb/os]
         function push(){
-            if [[ $1 == -* ]];then command git push $@; return; fi
+            if [[ $1 == -* ]];then git push $@; return; fi
 
             local remote="origin"
             local branch="master"
@@ -188,8 +177,8 @@ alias rm="rm -rf $@"
             fi
 
 
-            echo Pushing to:\"$remote\" branch:\"$branch$all\"
-            command git push -f $all --thin $remote $branch
+            echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1 | tee -a git_push.log
+            git push -f $all --thin $remote $branch
             printf '\a\a\a\a\n'
         }
     # commit & push
@@ -211,7 +200,7 @@ alias rm="rm -rf $@"
 
     # SSH
         function ssh(){
-            command ssh -t $@
+            command ssh -t $@ 2>&1 | tee -a ssh_$1.log
             # if [[ -n $2 && ! $2 == *-* ]]; then
             #     local command="${@:2}"
             # fi
@@ -304,7 +293,7 @@ alias rm="rm -rf $@"
         function node(){
             # local file=$(node_getFileAuto)
             echo -e "Running $@ \n=======\n"
-            eval "command node $file $@ $flags 2>&1 | tee -a .log"
+            eval "command node $file $@ $flags 2>&1 | tee -a nodejs_$1.log"
             if [[ "$loop" == "true" ]]; then
                 echo -e "\n=x=====================x=\n"
             else
@@ -367,7 +356,7 @@ alias rm="rm -rf $@"
                 local userconfig="--userconfig=npmrc"
             fi
             local globalignorefile="--globalignorefile=~/.gitignore"
-            eval "command npm $userconfig $globalignorefile $args $@"
+            eval "command npm $userconfig $globalignorefile $args $@ 2>&1 | tee -a npm_$1.log"
         }
     # publish after incrementing version (patch)
         function publish(){
@@ -596,6 +585,11 @@ alias rm="rm -rf $@"
             function osp(){
                 export osp=$@
             }
+
+    # rhc <commands>
+        rhc(){
+            command rhc $@ 2>&1 | tee -a rhc_$1.log
+        }
     # rhc <commands>
         function rhca(){
             if [[ -n "$osp" ]];then
@@ -603,7 +597,7 @@ alias rm="rm -rf $@"
             elif [[ -n "$ost" ]];then
                 local auth="--token $ost"
             fi
-            eval "command rhc $@ $auth -a $app"
+            eval "rhc $@ $auth -a $app"
         }
         function rhcja(){
             if [[ -n "$osp" ]];then
@@ -611,18 +605,18 @@ alias rm="rm -rf $@"
             elif [[ -n "$ost" ]];then
                 local auth="--token $ost"
             fi
-            eval "command rhc $@ $auth"
+            eval "rhc $@ $auth"
         }
     # ssh into opsnshift
         function sshos(){
             if [[ -n "$@" ]];then
                 local command="--command '$@'"
             fi
-            rhca ssh $command
+            rhca ssh $command 2>&1 | tee -a rhc.log
         }
     # oslogs
         function sshosl(){
-            sshos tail -n 100 -f app-root/logs/nodejs.log
+            sshos tail -n 100 -f app-root/logs/nodejs.log 2>&1 | tee -a nodejs_os.log
         }
 ## mysql apache related
     #mysql
