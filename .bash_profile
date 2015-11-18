@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_3_0
-if [[ "$dotfilesbashrcversion1_3_0" == "true" ]];then
+version=1_3_2
+if [[ "$dotfilesbashrcversion1_3_2" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_3_0="true"
+    dotfilesbashrcversion1_3_2="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -27,12 +27,18 @@ alias rm="rm -rf $@"
 
 ## Git related
     # git
-        function git(){
-            command git $@ 2>&1 | tee -a git_$1.log
-        }
+        # function git(){
+        #     # # command git $@ 2>&1 | tee -a git_$1.log
+        #     # if [[ -w git_$1.log ]];then
+        #     #     command git $@ 2>&1 | tee -a git_$1.log
+        #     # else
+        #     #     command git $@
+        #     # fi
+        #     command git $@
+        # }
     # git log
         function gl(){
-            git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d"
+            git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d" 2>&1 | tee -a git.log
             # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
             # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --date=relative --format=format:"%h %ar %cn %s %d"
         }
@@ -52,13 +58,13 @@ alias rm="rm -rf $@"
         }
     # commit auto
         function gc(){
-            git add -A
+            git add -A 2>&1 | tee -a git.log
             if [[ -z "$@" ]];then
                 local message="."
             else
                 local message="$@"
             fi
-            git commit -a -m "$message"
+            git commit -a -m "$message" 2>&1 | tee -a git.log
         }
     # stash
         function stash(){
@@ -66,22 +72,22 @@ alias rm="rm -rf $@"
             if [[ $@ == s* ]];then
                 local args="save --keep-index"
             fi
-            git stash $args
+            git stash $args 2>&1 | tee -a git.log
         }
     # git remote
         function remote(){
             if [[ -z "$@" ]];then
-                git remote -v
+                git remote -v 2>&1 | tee -a git.log
             elif [[ "$1" == *"@"* || "$1" == *"http"* ]];then
-                git remote add origin $1
-                git remote set-url origin $1
+                git remote add origin $1 2>&1 | tee -a git.log
+                git remote set-url origin $1 2>&1 | tee -a git.log
             else
-                git remote $@
+                git remote $@ 2>&1 | tee -a git.log
             fi
         }
     # git status
         function status(){
-            git status $@
+            git status $@ 2>&1 | tee -a git.log
         }
         function st(){
             status $@
@@ -91,9 +97,9 @@ alias rm="rm -rf $@"
             local args=$@
             if [[ "$1" == "-" ]];then
                 local args="-- ."
-                git clean -df
+                git clean -df 2>&1 | tee -a git.log
             fi
-            git checkout $args
+            git checkout $args 2>&1 | tee -a git.log
         }
         function ch(){
             checkout $@
@@ -104,7 +110,7 @@ alias rm="rm -rf $@"
             if [[ -z "$args" ]];then
                 local args="-i"
             fi
-            git add $args
+            git add $args 2>&1 | tee -a git.log
         }
     # git checkout master
         function master(){
@@ -139,7 +145,7 @@ alias rm="rm -rf $@"
             if [[ -n "$2" ]];then
                 branch="$2"
             fi
-            git pull -t $remote $branch
+            git pull -t $remote $branch 2>&1 | tee -a git.log
         }
     # push [gh/bb/os]
         function push(){
@@ -177,8 +183,8 @@ alias rm="rm -rf $@"
             fi
 
 
-            echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1 | tee -a git_push.log
-            git push -f $all --thin $remote $branch
+            echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1 | tee -a git.log
+            git push -f $all --thin $remote $branch 2>&1 | tee -a git.log
             printf '\a\a\a\a\n'
         }
     # commit & push
@@ -200,7 +206,7 @@ alias rm="rm -rf $@"
 
     # SSH
         function ssh(){
-            command ssh -t $@ 2>&1 | tee -a ssh_$1.log
+            command ssh -t $@ 2>&1 | tee -a ssh.log
             # if [[ -n $2 && ! $2 == *-* ]]; then
             #     local command="${@:2}"
             # fi
