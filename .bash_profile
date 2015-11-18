@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_3_3
-if [[ "$dotfilesbashrcversion1_3_3" == "true" ]];then
+version=1_3_5
+if [[ "$dotfilesbashrcversion1_3_5" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_3_3="true"
+    dotfilesbashrcversion1_3_5="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -595,8 +595,9 @@ alias rm="rm -rf $@"
 
     # rhc <commands>
         rhc(){
+            # eval "command rhc $@"
             echo "\$rhc $@" >> rhc.log
-            eval "command rhc \"$@\" 2>&1 | tee -a rhc.log"
+            eval "command rhc $@ 2>&1 | tee -a rhc.log"
         }
     # rhc <commands>
         function rhca(){
@@ -618,7 +619,7 @@ alias rm="rm -rf $@"
     # ssh into opsnshift
         function sshos(){
             if [[ -n "$@" ]];then
-                local command="--command '$@'"
+                local command="--command \'$@\'"
             fi
             rhca ssh $command
         }
