@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_3_5
-if [[ "$dotfilesbashrcversion1_3_5" == "true" ]];then
+version=1_3_6
+if [[ "$dotfilesbashrcversion1_3_6" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_3_5="true"
+    dotfilesbashrcversion1_3_6="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -299,7 +299,7 @@ alias rm="rm -rf $@"
         function node(){
             # local file=$(node_getFileAuto)
             echo -e "Running $@ \n=======\n"
-            eval "command node $file $@ $flags 2>&1 | tee -a nodejs_$1.log"
+            eval "command node $file $@ $flags 2>&1 | tee -a nodejs.log"
             if [[ "$loop" == "true" ]]; then
                 echo -e "\n=x=====================x=\n"
             else
