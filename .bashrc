@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_3_6
-if [[ "$dotfilesbashrcversion1_3_6" == "true" ]];then
+version=1_3_7
+if [[ "$dotfilesbashrcversion1_3_7" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_3_6="true"
+    dotfilesbashrcversion1_3_7="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -48,9 +48,9 @@ alias rm="rm -rf $@"
         }
         function gitk(){
             if [[ -n "$@" ]];then
-                gitk $@
+                command gitk $@
             else
-                gitk --all --branches --tags --remotes --date-order --full-history
+                command gitk --all --branches --tags --remotes --date-order --full-history
             fi
         }
         function guik(){
@@ -415,6 +415,7 @@ alias rm="rm -rf $@"
             export app="$OPENSHIFT_APP_NAME"
             export remote="OS"
             export OPENSHIFT="true"
+            export NODE_ENV="production"
             # export OPENSHIFT_HOME_DIR="app-root/data/"
             # export HOME=$OPENSHIFT_REPO_DIR
             function logs(){
