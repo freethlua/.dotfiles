@@ -7,11 +7,11 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_3_7
-if [[ "$dotfilesbashrcversion1_3_7" == "true" ]];then
+version=1_3_9
+if [[ "$dotfilesbashrcversion1_3_9" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_3_7="true"
+    dotfilesbashrcversion1_3_9="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -299,7 +299,8 @@ alias rm="rm -rf $@"
         function node(){
             # local file=$(node_getFileAuto)
             echo -e "Running $@ \n=======\n"
-            eval "command node $file $@ $flags 2>&1 | tee -a nodejs.log"
+            # eval "command node $file $@ $flags 2>&1 | tee -a nodejs.log"
+            eval "command node $@ 2>&1 | tee -a nodejs.log"
             if [[ "$loop" == "true" ]]; then
                 echo -e "\n=x=====================x=\n"
             else
@@ -389,7 +390,10 @@ alias rm="rm -rf $@"
 
 
 ## Proceed only if interactive terminal
-    if ! [[ -t 0 ]];then return; fi
+    if ! [[ -t 0 ]];then
+        echo Non-interactive terminal, some commands un-available
+        return;
+    fi
 
 
 
@@ -772,6 +776,15 @@ alias rm="rm -rf $@"
             checkout master
         }
 
+
+## repeat
+    # repeat
+        function repeat(){
+            echo -e "\nRunning $@ \n=======\n"
+            eval "command $@ 2>&1 | tee -a $1.log"
+            read -rsp $'\n\n--------\nFinished. Press Enter to repeat...\n'
+            repeat $@
+        }
 
 ## Last command execution time
     #Last command

@@ -1,6 +1,7 @@
 ﻿
 *.bashrc
 *.CMD
+*.cmd
 *.lnk
 *.log
 *.npmrc
@@ -8,8 +9,12 @@
 *.sublime*
 node_modules
 bower_modules
+jspm_packages
 .settings
 
 
 thumbs.db
 *.dmp
+*.stackdump
+
+desktop.ini
