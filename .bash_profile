@@ -296,19 +296,19 @@ alias rm="rm -rf $@"
             if [[ -f ./app/index.js ]]; then local file="app"; fi
             echo "$file"
         }
-        function node(){
-            # local file=$(node_getFileAuto)
-            echo -e "Running $@ \n=======\n"
-            # eval "command node $file $@ $flags 2>&1 | tee -a nodejs.log"
-            eval "command node $@ 2>&1 | tee -a nodejs.log"
-            if [[ "$loop" == "true" ]]; then
-                echo -e "\n=x=====================x=\n"
-            else
-                read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
-            fi
-            # clear
-            node $@
-        }
+        # function node(){
+        #     # local file=$(node_getFileAuto)
+        #     echo -e "Running $@ \n=======\n"
+        #     # eval "command node $file $@ $flags 2>&1 | tee -a nodejs.log"
+        #     eval "command node $@ 2>&1 | tee -a nodejs.log"
+        #     if [[ "$loop" == "true" ]]; then
+        #         echo -e "\n=x=====================x=\n"
+        #     else
+        #         read -rsp $'\n\n========\nFinished. Press Enter to re-run...\n'
+        #     fi
+        #     # clear
+        #     node $@
+        # }
         # function node(){
         #     # local flags="--harmony --harmony_modules --harmony_regexps --harmony_proxies --harmony_sloppy_function --harmony_sloppy_let --harmony_unicode_regexps --harmony_reflect --harmony_destructuring --harmony_default_parameters --harmony_sharedarraybuffer --harmony_atomics --harmony_simd"
         #     local flags=""
