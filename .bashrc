@@ -265,10 +265,18 @@ alias rm="rm -rf $@"
 ##notify
     #notify
         function notify {
-            nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
-            if [[ "$?" -ne "0" ]]; then
-                echo -e "\a\a"
+            echo -e "\a\a"
+
+            nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" & > /dev/null 2>&1
+            local title=$1
+            if [[ -z $title ]]; then
+                local title=bash
             fi
+            local message=${@:2}
+            if [[ -z $message ]]; then
+                local message=notification
+            fi
+            notifu.exe -p "$title" -m "$message" & > /dev/null 2>&1
         }
 
 
@@ -385,7 +393,7 @@ alias rm="rm -rf $@"
             echo -e "\n Publishing..."
             npm publish
             echo -e "\n Done"
-            notify
+            notify Published by $whoami
         }
 
 
@@ -813,7 +821,7 @@ alias rm="rm -rf $@"
             # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T (%d-%b-%Y)]')\e[0m"
             # echo -e "\e[7m$timer_show$timer_show_unit $(date +'[%T]')\e[0m"
             echo -e "\e[7m$timer_show$timer_show_unit\e[0m \e[7m$(date +'%H:%M')\e[0m"
-            notify
+            notify bash $(last_command)\\ncommand finished executing \($timer_show$timer_show_unit\)
         }
         trap "timer_start" DEBUG
 ## Bash Display Settings
