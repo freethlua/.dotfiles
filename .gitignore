@@ -18,3 +18,10 @@ thumbs.db
 *.stackdump
 
 desktop.ini
+
+*.todo
+TODO
+
+*.git
+
+-lib

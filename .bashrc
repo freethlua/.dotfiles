@@ -7,11 +7,12 @@
 # or
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
-version=1_4_0
-if [[ "$dotfilesbashrcversion1_4_0" == "true" ]];then
+
+version=1_5_2
+if [[ "$dotfilesbashrcversion1_5_2" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_4_0="true"
+    dotfilesbashrcversion1_5_2="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -44,13 +45,13 @@ alias rm="rm -rf $@"
         }
     # git gui and gitk
         function gui(){
-            git gui
+            git gui &
         }
         function gitk(){
             if [[ -n "$@" ]];then
-                command gitk $@
+                command gitk $@ &
             else
-                command gitk --all --branches --tags --remotes --date-order --full-history
+                command gitk --all --branches --tags --remotes --date-order --full-history &
             fi
         }
         function guik(){
@@ -185,7 +186,6 @@ alias rm="rm -rf $@"
 
             echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1 | tee -a git.log
             git push -f $all --thin $remote $branch 2>&1 | tee -a git.log
-            printf '\a\a\a\a\n'
         }
     # commit & push
         function gcp(){
@@ -276,7 +276,7 @@ alias rm="rm -rf $@"
             if [[ -z $message ]]; then
                 local message=notification
             fi
-            notifu.exe -p "$title" -m "$message" & > /dev/null 2>&1
+            notifu.exe -p "$title" -m "$message" & > /dev/null 2>&1 &
         }
 
 
@@ -539,6 +539,30 @@ alias rm="rm -rf $@"
         function scr(){ screen $@; }
         function sc(){ scr $@; }
 
+## Git Advanced
+    # cdc
+        # http://stackoverflow.com/questions/454734/how-can-one-change-the-timestamp-of-an-old-commit-in-git/24584976#24584976
+        function cdc(){
+            commit="$1" datecal="$2" message="${@:3}"
+            # echo $commit $datecal $message
+            temp_branch="temp-rebasing-branch"
+            current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+            date_timestamp=$(date -d "$datecal" +%s)
+            date_r=$(date -R -d "$datecal")
+
+            if [[ -z "$commit" ]]; then
+                exit 0
+            fi
+
+            git checkout -b "$temp_branch" "$commit"
+            GIT_COMMITTER_DATE="$date_timestamp" GIT_AUTHOR_DATE="$date_timestamp" git commit --amend --no-edit --date "$date_r" -m "$message"
+            git checkout "$current_branch"
+            git rebase  --autostash --committer-date-is-author-date "$commit" --onto "$temp_branch"
+            git branch -d "$temp_branch"
+        }
+
+
 ## --no-color
     # grunt --no-color
         function grunt(){
@@ -788,10 +812,14 @@ alias rm="rm -rf $@"
 ## repeat
     # repeat
         function repeat(){
-            echo -e "\nRunning $@ \n=======\n"
+            echo -e "\n$@ \n=======\n"
+
             eval "command $@ 2>&1 | tee -a $1.log"
-            read -rsp $'\n\n--------\nFinished. Press Enter to repeat...\n'
-            repeat $@
+
+            echo -e "\n--------\nFinished. Press Enter to repeat"
+            read -rs
+
+            eval "repeat $@"
         }
 
 ## Last command execution time

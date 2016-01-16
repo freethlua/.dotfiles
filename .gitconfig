@@ -8,6 +8,7 @@
     safecrlf = false
     excludesfile = ~/.gitignore
     ignorecase = true
+    editor = "C:\\Program Files\\Sublime Text\\sublime_text.exe"
 
 [gui]
     maxfilesdisplayed = 500
