@@ -29,9 +29,9 @@ alias rm="rm -rf $@"
 ## Git related
     # git
         # function git(){
-        #     # # command git $@ 2>&1 | tee -a git_$1.log
+        #     # # command git $@ 2>&1
         #     # if [[ -w git_$1.log ]];then
-        #     #     command git $@ 2>&1 | tee -a git_$1.log
+        #     #     command git $@ 2>&1
         #     # else
         #     #     command git $@
         #     # fi
@@ -39,7 +39,7 @@ alias rm="rm -rf $@"
         # }
     # git log
         function gl(){
-            git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d" 2>&1 | tee -a git.log
+            git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %d" 2>&1
             # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --decorate --date=relative --format=format:"%h %ar %cn %s %C(reverse)%d"
             # command git log --all --branches --remotes --tags --graph --oneline --abbrev-commit --date=relative --format=format:"%h %ar %cn %s %d"
         }
@@ -59,13 +59,13 @@ alias rm="rm -rf $@"
         }
     # commit auto
         function gc(){
-            git add -A 2>&1 | tee -a git.log
+            git add -A 2>&1
             if [[ -z "$@" ]];then
                 local message="."
             else
                 local message="$@"
             fi
-            git commit -a -m "$message" 2>&1 | tee -a git.log
+            git commit -a -m "$message" 2>&1
         }
     # stash
         function stash(){
@@ -73,22 +73,22 @@ alias rm="rm -rf $@"
             if [[ $@ == s* ]];then
                 local args="save --keep-index"
             fi
-            git stash $args 2>&1 | tee -a git.log
+            git stash $args 2>&1
         }
     # git remote
         function remote(){
             if [[ -z "$@" ]];then
-                git remote -v 2>&1 | tee -a git.log
+                git remote -v 2>&1
             elif [[ "$1" == *"@"* || "$1" == *"http"* ]];then
-                git remote add origin $1 2>&1 | tee -a git.log
-                git remote set-url origin $1 2>&1 | tee -a git.log
+                git remote add origin $1 2>&1
+                git remote set-url origin $1 2>&1
             else
-                git remote $@ 2>&1 | tee -a git.log
+                git remote $@ 2>&1
             fi
         }
     # git status
         function status(){
-            git status $@ 2>&1 | tee -a git.log
+            git status $@ 2>&1
         }
         function st(){
             status $@
@@ -98,9 +98,9 @@ alias rm="rm -rf $@"
             local args=$@
             if [[ "$1" == "-" ]];then
                 local args="-- ."
-                git clean -df 2>&1 | tee -a git.log
+                git clean -df 2>&1
             fi
-            git checkout $args 2>&1 | tee -a git.log
+            git checkout $args 2>&1
         }
         function ch(){
             checkout $@
@@ -111,7 +111,7 @@ alias rm="rm -rf $@"
             if [[ -z "$args" ]];then
                 local args="-i"
             fi
-            git add $args 2>&1 | tee -a git.log
+            git add $args 2>&1
         }
     # git checkout master
         function master(){
@@ -146,7 +146,7 @@ alias rm="rm -rf $@"
             if [[ -n "$2" ]];then
                 branch="$2"
             fi
-            git pull -t $remote $branch 2>&1 | tee -a git.log
+            git pull -t $remote $branch 2>&1
         }
     # push [gh/bb/os]
         function push(){
@@ -184,8 +184,8 @@ alias rm="rm -rf $@"
             fi
 
 
-            echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1 | tee -a git.log
-            git push -f $all --thin $remote $branch 2>&1 | tee -a git.log
+            echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1
+            git push -f $all --thin $remote $branch 2>&1
         }
     # commit & push
         function gcp(){
@@ -216,7 +216,7 @@ alias rm="rm -rf $@"
 
     # SSH
         function ssh(){
-            command ssh -t $@ 2>&1 | tee -a ssh.log
+            command ssh -t $@ 2>&1
             # if [[ -n $2 && ! $2 == *-* ]]; then
             #     local command="${@:2}"
             # fi
@@ -294,7 +294,7 @@ alias rm="rm -rf $@"
     # node .
         function nodeloop(){
             echo -e "Running node..."
-            eval "command node $@ $flags $file 2>&1 | tee -a .log"
+            eval "command node $@ $flags $file 2>&1"
             # eval "command node $file $@"
             if [[ "$loop" == "true" ]]; then
                 echo -e "\n=x=====================x=\n"
@@ -317,8 +317,8 @@ alias rm="rm -rf $@"
         # function node(){
         #     # local file=$(node_getFileAuto)
         #     echo -e "Running $@ \n=======\n"
-        #     # eval "command node $file $@ $flags 2>&1 | tee -a nodejs.log"
-        #     eval "command node $@ 2>&1 | tee -a nodejs.log"
+        #     # eval "command node $file $@ $flags 2>&1"
+        #     eval "command node $@ 2>&1"
         #     if [[ "$loop" == "true" ]]; then
         #         echo -e "\n=x=====================x=\n"
         #     else
@@ -344,7 +344,7 @@ alias rm="rm -rf $@"
         #         if [[ -f ./app/index.js ]]; then local file="app"; fi
         #         if [[ -n $file ]]; then
         #             echo -e "Running $file $@ \n=======\n"
-        #             eval "command node $@ $flags $file 2>&1 | tee -a .log"
+        #             eval "command node $@ $flags $file 2>&1"
         #             # eval "command node $file $@"
         #             if [[ "$loop" == "true" ]]; then
         #                 echo -e "\n=x=====================x=\n"
@@ -382,7 +382,7 @@ alias rm="rm -rf $@"
             fi
             local globalignorefile="--globalignorefile=~/.gitignore"
             echo "\$npm $@" >> npm.log
-            eval "command npm $userconfig $globalignorefile $args $@ 2>&1 | tee -a npm.log"
+            eval "command npm $userconfig $globalignorefile $args $@ 2>&1"
         }
     # publish after incrementing version (patch)
         function publish(){
@@ -644,7 +644,7 @@ alias rm="rm -rf $@"
         rhc(){
             # eval "command rhc $@"
             echo "\$rhc $@" >> rhc.log
-            eval "command rhc $@ 2>&1 | tee -a rhc.log"
+            eval "command rhc $@ 2>&1"
         }
     # rhc <commands>
         function rhca(){
@@ -824,7 +824,7 @@ alias rm="rm -rf $@"
         function repeat(){
             echo -e "\n$@ \n=======\n"
 
-            eval "command $@ 2>&1 | tee -a $1.log"
+            eval "command $@ 2>&1"
 
             echo -e "\n--------\nFinished. Press Enter to repeat"
             read -rs
