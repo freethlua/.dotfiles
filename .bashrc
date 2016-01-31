@@ -203,6 +203,16 @@ alias rm="rm -rf $@"
             remote $@
             gcp initial commit
         }
+    # init, name
+        function gin(){
+            git init
+            git config user.name $1
+            if [[ -n $2 ]]; then
+                git config user.email $2
+            else
+                git config user.email $1@gmail.com
+            fi
+        }
 
     # SSH
         function ssh(){
@@ -399,7 +409,7 @@ alias rm="rm -rf $@"
 
 ## Proceed only if interactive terminal
     if ! [[ -t 0 ]];then
-        echo Non-interactive terminal, some commands un-available
+        # echo Non-interactive terminal, some commands un-available
         return;
     fi
 
