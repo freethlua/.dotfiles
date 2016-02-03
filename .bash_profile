@@ -277,7 +277,7 @@ alias rm="rm -rf $@"
         function notify {
             echo -e "\a\a"
 
-            nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" & > /dev/null 2>&1
+            nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
             local title=$1
             if [[ -z $title ]]; then
                 local title=bash
@@ -286,12 +286,17 @@ alias rm="rm -rf $@"
             if [[ -z $message ]]; then
                 local message=notification
             fi
-            notifu.exe -p "$title" -m "$message" & > /dev/null 2>&1 &
+            notifu.exe -p "$title" -m "$message" > /dev/null 2>&1
         }
 
 
 ## node related
     # node .
+        function node_auto(){
+            local file=$(node_getFileAuto)
+            echo $file
+            node $file
+        }
         function nodeloop(){
             echo -e "Running node..."
             eval "command node $@ $flags $file 2>&1 | tee -a .log"
@@ -409,7 +414,7 @@ alias rm="rm -rf $@"
 
 ## Proceed only if interactive terminal
     if ! [[ -t 0 ]];then
-        # echo Non-interactive terminal, some commands un-available
+        echo Non-interactive terminal, some commands un-available
         return;
     fi
 
@@ -823,8 +828,19 @@ alias rm="rm -rf $@"
     # repeat
         function repeat(){
             echo -e "\n$@ \n=======\n"
-
-            eval "command $@ 2>&1 | tee -a $1.log"
+            # args=$@
+            # args=($args)
+            # echo $@
+            # echo $args
+            # echo ${("$1")[0]}
+            # echo ${${($1)}}
+            # echo ${("$1")[0]}
+            # echo ${$1[0]}
+            # echo "command $@ 2>&1 | tee -a ${args[0]}.log"
+            # eval "command '$@' 2>&1 | tee -a ${args[0]}.log"
+            eval "$@ 2>&1 | tee -a ${args[0]}.log"
+            # eval "command $@ 2>&1 | tee -a " . ${($1)[0]} . ".log"
+            # # eval "command $@ 2>&1 | tee -a $1.log"
 
             echo -e "\n--------\nFinished. Press Enter to repeat"
             read -rs
