@@ -414,7 +414,7 @@ alias rm="rm -rf $@"
 
 ## Proceed only if interactive terminal
     if ! [[ -t 0 ]];then
-        echo Non-interactive terminal, some commands un-available
+        # echo Non-interactive terminal, some commands un-available
         return;
     fi
 
