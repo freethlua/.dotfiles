@@ -828,19 +828,7 @@ alias rm="rm -rf $@"
     # repeat
         function repeat(){
             echo -e "\n$@ \n=======\n"
-            # args=$@
-            # args=($args)
-            # echo $@
-            # echo $args
-            # echo ${("$1")[0]}
-            # echo ${${($1)}}
-            # echo ${("$1")[0]}
-            # echo ${$1[0]}
-            # echo "command $@ 2>&1 | tee -a ${args[0]}.log"
-            # eval "command '$@' 2>&1 | tee -a ${args[0]}.log"
             eval "$@ 2>&1 | tee -a ${args[0]}.log"
-            # eval "command $@ 2>&1 | tee -a " . ${($1)[0]} . ".log"
-            # # eval "command $@ 2>&1 | tee -a $1.log"
 
             echo -e "\n--------\nFinished. Press Enter to repeat"
             read -rs
