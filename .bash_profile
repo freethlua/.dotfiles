@@ -61,11 +61,11 @@ alias rm="rm -rf $@"
         function gc(){
             git add -A 2>&1 | tee -a git.log
             if [[ -z "$@" ]];then
-                local message="."
+                local opts="--amend --no-edit"
             else
-                local message="$@"
+                local opts="-m '$@'"
             fi
-            git commit -a -m "$message" 2>&1 | tee -a git.log
+            eval "git commit -a $opts 2>&1 | tee -a git.log"
         }
     # stash
         function stash(){
