@@ -96,10 +96,6 @@ alias rm="rm -rf $@"
     # git checkout
         function checkout(){
             local args=$@
-            if [[ "$1" == "-" ]];then
-                local args="-- ."
-                git clean -df 2>&1 | tee -a git.log
-            fi
             git checkout $args 2>&1 | tee -a git.log
         }
         function ch(){
