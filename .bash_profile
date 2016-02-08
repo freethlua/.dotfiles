@@ -8,11 +8,11 @@
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
 
-version=1_5_2
-if [[ "$dotfilesbashrcversion1_5_2" == "true" ]];then
+version=1_6_1
+if [[ "$dotfilesbashrcversion1_6_1" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_5_2="true"
+    dotfilesbashrcversion1_6_1="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -182,6 +182,7 @@ alias rm="rm -rf $@"
 
             echo Pushing to:\"$remote\" branch:\"$branch$all\" 2>&1 | tee -a git.log
             git push -f $all --thin $remote $branch 2>&1 | tee -a git.log
+            notify Pushed to $remote
         }
     # commit & push
         function gcp(){
@@ -270,10 +271,10 @@ alias rm="rm -rf $@"
         # }
 ##notify
     #notify
-        function notify {
+        function notify(){
             echo -e "\a\a"
 
-            nircmd mediaplay 1000 "C:\Windows\Media\Windows Ding.wav" > /dev/null 2>&1
+            bkg nircmd mediaplay 1000 \"C:/Windows/Media/Windows Ding.wav\"
             local title=$1
             if [[ -z $title ]]; then
                 local title=bash
@@ -282,8 +283,14 @@ alias rm="rm -rf $@"
             if [[ -z $message ]]; then
                 local message=notification
             fi
-            notifu.exe -p "$title" -m "$message" > /dev/null 2>&1
+            bkg notifu.exe -p \"$title\" -m \"$message\"
         }
+##background
+    #bkg
+        function bkg(){
+            eval "( $@ > /dev/null 2>&1 & disown ) > /dev/null 2>&1"
+        }
+
 
 
 ## node related
@@ -915,7 +922,7 @@ alias rm="rm -rf $@"
             echo -e "\e[7m$\e[0m "
         }
 
-        function p(){
+        function PSprompt(){
             PS1="$(PSremote)$(PSappname)$(PSdir)$(PSgit)$(PSpromptsymbol)"
             # PS1='$(if [[ -n "$remote" ]];then echo -e "\e[7m$remote\e[0m ";fi)$(if [[ -n "$app" ]];then echo -e "\e[7m$app\e[0m ";fi)…/${PWD##*/}$(gitps1)\e[7m$\e[0m '
             # http://google.com/search?q=bash+prompt+right+align+???
@@ -958,7 +965,7 @@ alias rm="rm -rf $@"
                 # last_execution_time_prompt_command
                 timer_stop
             # PS1
-                p
+                PSprompt
         }
         PROMPT_COMMAND="prompt_command"
 

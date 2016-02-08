@@ -7,7 +7,7 @@
 *.npmrc
 *.npmignore
 *.sublime*
-node_modules
+node_modules*
 bower_modules
 jspm_packages
 .settings
@@ -28,3 +28,5 @@ TODO
 
 *.marko.js
 .cache
+
+lasso-static
