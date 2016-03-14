@@ -8,11 +8,11 @@
 # if [[ -t 0 ]];then curl -sk https://raw.githubusercontent.com/xxxxxxxxx/.dotfiles/master/.bashrc -o /tmp/temp.bashrc 2> /dev/null && . /tmp/temp.bashrc && rm -f /tmp/temp.bashrc; fi
 
 
-version=1_6_1
-if [[ "$dotfilesbashrcversion1_6_1" == "true" ]];then
+version=1_8_0
+if [[ "$dotfilesbashrcversion1_8_0" == "true" ]];then
     return
 else
-    dotfilesbashrcversion1_6_1="true"
+    dotfilesbashrcversion1_8_0="true"
 fi
 function .v(){
     # echo -e "\e[7m .dotfiles/.bashrc \e[0m \e[7m v$version \e[0m"
@@ -517,6 +517,12 @@ alias rm="rm -rf $@"
             command ls -Ahl $@
             d
         }
+        function lsn(){
+            local dir=
+            [[ -n "$@" ]] && dir="$@" || dir="."
+            printf "Number of files in \"$dir\" = "
+            ls -1 $dir | wc -l
+        }
     # remove
         function rm(){
             command rm -rf $@
@@ -556,6 +562,20 @@ alias rm="rm -rf $@"
         }
         function scr(){ screen $@; }
         function sc(){ scr $@; }
+    # tmux
+        function tmux(){
+            if [[ -z "$@" ]]; then
+                command tmux list-sessions
+            elif [[ -n "$1" && -z "$2" ]]; then
+                command tmux attach -t $1
+                if [[ $? -ne 0 ]]; then
+                    command tmux new -s $1
+                fi
+            else
+                command tmux $@
+            fi
+        }
+        function tm(){ tmux $@; }
 
 ## Git Advanced
     # cdc
