@@ -523,6 +523,7 @@ alias rm="rm -rf $@"
             printf "Number of files in \"$dir\" = "
             ls -1 $dir | wc -l
         }
+
     # remove
         function rm(){
             command rm -rf $@
